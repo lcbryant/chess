@@ -6,17 +6,19 @@
  * handles window resizes.
  *
  */
+
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene } from 'scenes';
+import { SeedScene, ChessScene } from 'scenes';
 
 // Initialize core ThreeJS components
-const scene = new SeedScene();
+const chessScene = new ChessScene();
+const seedScene = new SeedScene();
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera
-camera.position.set(6, 3, -10);
+camera.position.set(1, 1, 1);
 camera.lookAt(new Vector3(0, 0, 0));
 
 // Set up renderer, canvas, and minor CSS adjustments
@@ -31,15 +33,15 @@ document.body.appendChild(canvas);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
-controls.minDistance = 4;
-controls.maxDistance = 16;
+controls.minDistance = 1;
+controls.maxDistance = 2;
 controls.update();
 
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
     controls.update();
-    renderer.render(scene, camera);
-    scene.update && scene.update(timeStamp);
+    renderer.render(chessScene, camera);
+    chessScene.update && chessScene.update(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
@@ -51,5 +53,6 @@ const windowResizeHandler = () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
 };
+
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
