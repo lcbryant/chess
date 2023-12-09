@@ -1,6 +1,6 @@
 import * as Dat from 'dat.gui';
 import { Scene, Color } from 'three';
-import { Board } from 'objects';
+import { Board, Pawn } from 'objects';
 import { BasicLights } from 'lights';
 
 class ChessScene extends Scene {
@@ -16,9 +16,9 @@ class ChessScene extends Scene {
         // Set background to a nice color
         this.background = new Color(0x000000);
 
-        const board = new Board();
         const lights = new BasicLights();
-        this.add(board, lights);
+        this.add(lights);
+        this.setUpBoard();
 
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
     }
@@ -27,13 +27,23 @@ class ChessScene extends Scene {
         this.state.updateList.push(object);
     }
 
-    update(timeStamp) {
-        const { rotationSpeed, updateList } = this.state;
-        this.rotation.y = (rotationSpeed * timeStamp) / 10000;
+    update(timeStamp) {}
 
-        // Call update for each object in the updateList
-        for (const obj of updateList) {
-            obj.update(timeStamp);
+    setUpBoard() {
+        const board = new Board();
+        this.add(board);
+        // add white pawns
+        for (let i = 0; i < 8; i++) {
+            const pawn = new Pawn('w', i + 1);
+            // tile size is 0.0625m x 0.0625m
+            pawn.position.set(0.0625 * i, 0, 0);
+            this.add(pawn);
+        }
+        // add black pawns
+        for (let i = 0; i < 8; i++) {
+            const pawn = new Pawn('b', i + 1);
+            pawn.position.set(0.0625 * i, 0, -0.0625 * 5);
+            this.add(pawn);
         }
     }
 }
