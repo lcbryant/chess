@@ -1,30 +1,13 @@
-import { Group } from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import MODEL from './pawn.glb';
+import { Piece } from '../Piece';
 
-class Pawn extends Group {
+class Pawn extends Piece {
     /**
      * @param {String} color
      */
-    constructor(color, number) {
-        super();
-
-        const loader = new GLTFLoader();
-
+    constructor(type, color, initialPosition, number) {
+        super(type, MODEL, color, initialPosition, number);
         this.name = 'pawn';
-        this.color = color;
-        this.number = number;
-
-        loader.load(
-            MODEL,
-            (gltf) => {
-                const c = color === 'w' ? 0x808080 : 0x0f0f0f;
-                console.log(gltf.scene.children[0].material.color.setHex(c));
-                this.add(gltf.scene);
-            },
-            undefined,
-            (error) => console.error(error)
-        );
     }
 }
 
