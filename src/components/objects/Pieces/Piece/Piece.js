@@ -45,21 +45,21 @@ class Piece extends Group {
     changeMaterial() {
         this.mesh.traverse((o) => {
             if (!o.isMesh) {
-              return;
+                return;
             }
-      
+
             o.userData.lastParent = this;
-      
+
             o.castShadow = true;
             o.receiveShadow = true;
-      
+
             const color = new Color().setHex(this.colorHex);
-      
+
             color.convertSRGBToLinear();
             o.material = new MeshPhongMaterial({
-              color,
+                color,
             });
-          });
+        });
     }
 }
 

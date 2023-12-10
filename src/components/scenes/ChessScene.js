@@ -1,5 +1,5 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color, GridHelper, CameraHelper, SpotLightHelper } from 'three';
+import { Scene, Color, GridHelper, SpotLightHelper } from 'three';
 import { Board, Pawn, Rook, Knight, Bishop, King, Queen } from 'objects';
 import { BasicLights } from 'lights';
 
@@ -18,8 +18,8 @@ class ChessScene extends Scene {
         // Set background to a nice color
         this.background = new Color(0x000000);
 
-        const light = new BasicLights();
-        this.add(light);
+        const lights = new BasicLights();
+        this.add(lights);
         this.setUpHelpers();
         this.setUpBoard();
 
@@ -35,6 +35,9 @@ class ChessScene extends Scene {
     setUpHelpers() {
         const gridHelper = new GridHelper(1, 16);
         this.add(gridHelper);
+        const spotLight = this.children[0].children[0];
+        const spotLightHelper = new SpotLightHelper(spotLight);
+        this.add(spotLightHelper);
     }
 
     setUpBoard() {

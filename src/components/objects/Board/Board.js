@@ -9,11 +9,11 @@ class Board extends Group {
         const loader = new GLTFLoader();
 
         this.name = 'board';
-
         loader.load(
             MODEL,
             (gltf) => {
                 this.add(gltf.scene);
+                this.model = gltf;
             },
             undefined,
             (error) => console.error(error)
