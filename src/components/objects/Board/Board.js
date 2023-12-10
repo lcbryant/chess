@@ -1,6 +1,6 @@
 import { Group } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import MODEL from './board.glb';
+import MODEL from '../../../assets/board.glb';
 
 class Board extends Group {
     constructor() {

@@ -1,4 +1,4 @@
-import MODEL from './pawn.glb';
+import MODEL from '../../../../assets/pawn.glb';
 import { Piece } from '../Piece';
 
 class Pawn extends Piece {

@@ -1,9 +1,9 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color } from 'three';
+import { Scene, Color, GridHelper, CameraHelper, SpotLightHelper } from 'three';
 import { Board, Pawn, Rook, Knight, Bishop, King, Queen } from 'objects';
 import { BasicLights } from 'lights';
 
-const TILE_SIZE = 0.0625; // board tile size, 0.0625m / 6.25cm / 2.5in
+const TILE_SIZE = 0.0625; // board tile size, 0.0625m x 0.0625m
 
 class ChessScene extends Scene {
     constructor() {
@@ -18,8 +18,9 @@ class ChessScene extends Scene {
         // Set background to a nice color
         this.background = new Color(0x000000);
 
-        const lights = new BasicLights();
-        this.add(lights);
+        const light = new BasicLights();
+        this.add(light);
+        this.setUpHelpers();
         this.setUpBoard();
 
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
@@ -30,6 +31,11 @@ class ChessScene extends Scene {
     }
 
     update(timeStamp) {}
+
+    setUpHelpers() {
+        const gridHelper = new GridHelper(1, 16);
+        this.add(gridHelper);
+    }
 
     setUpBoard() {
         const board = new Board();

@@ -1,4 +1,4 @@
-import MODEL from './knight.glb';
+import MODEL from '../../../../assets/knight.glb';
 import { Piece } from '../Piece';
 
 class Knight extends Piece {

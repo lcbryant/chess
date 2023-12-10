@@ -1,5 +1,5 @@
 import { Group } from 'three';
-import { Color, Mesh, MeshPhongMaterial, Vector3 } from 'three';
+import { Color, Mesh, MeshPhongMaterial, Vector3, Box3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const PIECE_COLOR = 'w' | 'b';
@@ -20,22 +20,46 @@ class Piece extends Group {
         const loader = new GLTFLoader();
 
         this.type = type;
-        this.model = model;
         this.color = color;
+        this.model = model;
         this.number = number;
         this.colorHex = color === 'w' ? HEX_W : HEX_B;
+        this.hitbox = new Box3();
 
         loader.load(
             model,
             (gltf) => {
-                gltf.scene.children[0].material.color.setHex(this.colorHex);
+                this.mesh = gltf.scene.children[0];
+                this.changeMaterial();
                 // rotate the black pieces 180 degrees
-                if (this.color === 'b') gltf.scene.children[0].rotateY(Math.PI);
+                if (this.color === 'b') this.mesh.rotateY(Math.PI);
+                // create the hitbox for the piece
+                this.hitbox.setFromObject(this.mesh);
                 this.add(gltf.scene);
             },
             undefined,
             (error) => console.error(error)
         );
+    }
+
+    changeMaterial() {
+        this.mesh.traverse((o) => {
+            if (!o.isMesh) {
+              return;
+            }
+      
+            o.userData.lastParent = this;
+      
+            o.castShadow = true;
+            o.receiveShadow = true;
+      
+            const color = new Color().setHex(this.colorHex);
+      
+            color.convertSRGBToLinear();
+            o.material = new MeshPhongMaterial({
+              color,
+            });
+          });
     }
 }
 
