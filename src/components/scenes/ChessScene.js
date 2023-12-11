@@ -3,8 +3,6 @@ import { Scene, Color, GridHelper, SpotLightHelper } from 'three';
 import { Board, Pawn, Rook, Knight, Bishop, King, Queen } from 'objects';
 import { BasicLights } from 'lights';
 
-const TILE_SIZE = 0.0625; // board tile size, 0.0625m x 0.0625m
-
 class ChessScene extends Scene {
     constructor() {
         super();
@@ -43,68 +41,71 @@ class ChessScene extends Scene {
     setUpBoard() {
         const board = new Board();
         this.add(board);
+        const positions = board.tilePositionMatrix;
         // add white pawns
         for (let i = 0; i < 8; i++) {
             const pawn = new Pawn('p', 'w', i + 1);
-            pawn.position.set(TILE_SIZE * i, 0, 0);
+            pawn.position.copy(positions['b'][i]);
             this.add(pawn);
         }
         // add white rooks
         for (let i = 0; i < 2; i++) {
             const rook = new Rook('r', 'w', i + 1);
-            rook.position.set(TILE_SIZE * 7 * i, 0, 0);
+            rook.position.copy(positions['a'][i * 7]);
             this.add(rook);
         }
         // add white knights
         for (let i = 0; i < 2; i++) {
             const knight = new Knight('n', 'w', i + 1);
-            knight.position.set(TILE_SIZE * 5 * i, 0, 0);
+            knight.position.copy(positions['a'][i * 6 > 0 ? 6 : 1]);
             this.add(knight);
         }
         // add white bishops
         for (let i = 0; i < 2; i++) {
             const bishop = new Bishop('b', 'w', i + 1);
-            bishop.position.set(TILE_SIZE * 3 * i, 0, 0);
+            bishop.position.copy(positions['a'][i * 5 > 0 ? 5 : 2]);
             this.add(bishop);
         }
         // add white queen
-        const queen = new Queen('q', 'w', 1);
-        this.add(queen);
+        const wQueen = new Queen('q', 'w', 1);
+        wQueen.position.copy(positions['a'][4]);
+        this.add(wQueen);
         // add white king
-        const king = new King('k', 'w', 1);
-        this.add(king);
+        const wKing = new King('k', 'w', 1);
+        wKing.position.copy(positions['a'][3]);
+        this.add(wKing);
         // add black pawns
         for (let i = 0; i < 8; i++) {
             const pawn = new Pawn('p', 'b', i + 1);
-            pawn.position.set(TILE_SIZE * i, 0, -TILE_SIZE * 5);
+            pawn.position.copy(positions['g'][i]);
             this.add(pawn);
         }
         // add black rooks
         for (let i = 0; i < 2; i++) {
             const rook = new Rook('r', 'b', i + 1);
-            rook.position.set(TILE_SIZE * 7 * i, 0, -TILE_SIZE * 7);
+            rook.position.copy(positions['h'][i * 7]);
             this.add(rook);
         }
         // add black knights
         for (let i = 0; i < 2; i++) {
             const knight = new Knight('n', 'b', i + 1);
-            knight.position.set(TILE_SIZE * 5 * i, 0, -TILE_SIZE * 7);
+            knight.position.copy(positions['h'][i * 6 > 0 ? 6 : 1]);
             this.add(knight);
         }
         // add black bishops
         for (let i = 0; i < 2; i++) {
             const bishop = new Bishop('b', 'b', i + 1);
-            bishop.position.set(TILE_SIZE * 3 * i, 0, -TILE_SIZE * 7);
+            bishop.position.copy(positions['h'][i * 5 > 0 ? 5 : 2]);
             this.add(bishop);
         }
         // add black queen
-        const queen2 = new Queen('q', 'b', 1);
-        queen2.position.set(0, 0, -TILE_SIZE * 7);
-        this.add(queen2);
+        const bQueen = new Queen('q', 'b', 1);
+        bQueen.position.copy(positions['h'][4]);
+        this.add(bQueen);
         // add black king
-        const king2 = new King('k', 'b', 1);
-        king2.position.set(0, 0, -TILE_SIZE * 7);
-        this.add(king2);
+        const bKing = new King('k', 'b', 1);
+        bKing.position.copy(positions['h'][3]);
+        this.add(bKing);
     }
 }
 

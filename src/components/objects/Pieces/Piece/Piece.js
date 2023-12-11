@@ -1,5 +1,5 @@
 import { Group } from 'three';
-import { Color, Mesh, MeshPhongMaterial, Vector3, Box3 } from 'three';
+import { Color, MeshPhongMaterial, Box3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const PIECE_COLOR = 'w' | 'b';
