@@ -3,8 +3,22 @@
  */
 import { Color, MeshPhongMaterial, MeshStandardMaterial } from 'three';
 
-export const PIECE_TYPE = 'p' | 'r' | 'n' | 'b' | 'q' | 'k';
-export const PIECE_COLOR = 'w' | 'b';
+export const PIECE_TYPE = {
+    KNIGHT: 'n',
+    ROOK: 'r',
+    BISHOP: 'b',
+    QUEEN: 'q',
+    KING: 'k',
+    PAWN: 'p',
+};
+export const PIECE_COLOR = { WHITE: 'w', BLACK: 'b' };
+
+export class ChessPosition {
+    constructor(row, column) {
+        this.row = row;
+        this.column = column;
+    }
+}
 
 class ChessConfig {
     static get BOARD_SIZE() {
@@ -75,32 +89,6 @@ class ChessConfig {
             1: 'g',
             0: 'h',
         };
-    }
-
-    static get BOARD_MODEL() {}
-
-    static get PAWN_MODEL() {
-        return 'models/pawn.glb';
-    }
-
-    static get ROOK_MODEL() {
-        return 'models/rook.glb';
-    }
-
-    static get KNIGHT_MODEL() {
-        return 'models/knight.glb';
-    }
-
-    static get BISHOP_MODEL() {
-        return 'models/bishop.glb';
-    }
-
-    static get QUEEN_MODEL() {
-        return 'models/queen.glb';
-    }
-
-    static get KING_MODEL() {
-        return 'models/king.glb';
     }
 }
 
