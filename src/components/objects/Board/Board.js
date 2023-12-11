@@ -2,29 +2,17 @@ import { Group, PlaneGeometry, Mesh, Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import MODEL from '../../../assets/board_base.glb';
-
 import { ChessConfig } from '../../config';
 
 class Board extends Group {
-    constructor() {
+    constructor(loader) {
         super();
         this.name = 'board';
-        this.add(this.createBoard());
+        const baseModel = this.initBaseModel(loader);
+        this.add(this.createBoard(), baseModel);
         this.chessFieldColumns = ChessConfig.CHESS_FIELD_COLUMNS;
         this.chessFieldLetters = ChessConfig.CHESS_FIELD_LETTERS;
-
         this.createTilePositionMatrix();
-
-        // loads the model for the base of the chess board
-        const loader = new GLTFLoader();
-        loader.load(
-            MODEL,
-            (gltf) => {
-                this.add(gltf.scene);
-            },
-            undefined,
-            (error) => console.error(error)
-        );
     }
 
     /**
@@ -62,6 +50,26 @@ class Board extends Group {
         chessBoard.receiveShadow = true;
         chessBoard.name = 'chessBoard';
         return chessBoard;
+    }
+
+    /**
+     *  @param {GLTFLoader} loader
+     *  @returns {Promise<GLTF>}
+     */
+    initBaseModel(loader) {
+        return new Promise((resolve, reject) => {
+            loader.load(
+                MODEL,
+                (gltf) => {
+                    this.add(gltf.scene);
+                    resolve(gltf);
+                },
+                undefined,
+                (event) => {
+                    reject(event);
+                }
+            );
+        });
     }
 
     /**

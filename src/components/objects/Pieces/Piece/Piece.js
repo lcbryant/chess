@@ -2,43 +2,31 @@ import { Object3D } from 'three';
 import { Box3 } from 'three';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-import { ChessConfig, PIECE_TYPE, PIECE_COLOR } from '../../../config';
+import {
+    ChessConfig,
+    ChessPosition,
+    PIECE_TYPE,
+    PIECE_COLOR,
+} from '../../../config';
 
 class Piece extends Object3D {
     /**
      * @param {PIECE_TYPE} type
      * @param {GLTF} model
      * @param {PIECE_COLOR} color
-     * @param {{string: number}} initialPosition
+     * @param {ChessPosition} initialPosition
      * @param {number} number - the number corresponds to the multiples of the piece type
      */
     constructor(type, model, color, initialPosition, number) {
         super();
-
-        const loader = new GLTFLoader();
-
         this.type = type;
         this.name = `${color}${type}${number}`;
         this.color = color;
         this.model = model;
         this.number = number;
-        this.chessPos = initialPosition;
+        this.initChessPos = initialPosition;
+        this.currChessPos = initialPosition;
         this.hitbox = new Box3();
-
-        loader.load(
-            model,
-            (gltf) => {
-                this.mesh = gltf.scene.children[0];
-                this.changeMaterial();
-                // rotate the black pieces 180 degrees
-                if (this.color === 'b') this.mesh.rotateY(Math.PI);
-                // create the hitbox for the piece
-                this.hitbox.setFromObject(this.mesh);
-                this.add(gltf.scene);
-            },
-            undefined,
-            (error) => console.error(error)
-        );
     }
 
     /**
@@ -48,10 +36,9 @@ class Piece extends Object3D {
     initModel(loader) {
         return new Promise((resolve, reject) => {
             loader.load(
-                this.modelName,
+                this.model,
                 (gltf) => {
                     this.add(gltf.scene);
-                    this.model = gltf;
                     this.mesh = gltf.scene.children[0];
                     this.changeMaterial();
                     if (this.color === 'b') this.mesh.rotateY(Math.PI);
@@ -82,6 +69,13 @@ class Piece extends Object3D {
                     ? ChessConfig.PIECE_WHITE_MATERIAL
                     : ChessConfig.PIECE_BLACK_MATERIAL;
         });
+    }
+
+    update(chessPos) {}
+
+    reset(position) {
+        this.position.copy(position);
+        this.currentChessPos = this.intialChessPos;
     }
 }
 
