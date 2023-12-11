@@ -1,18 +1,16 @@
-import { Group } from 'three';
-import { Color, MeshPhongMaterial, Box3 } from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Object3D } from 'three';
+import { Box3 } from 'three';
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-const PIECE_COLOR = 'w' | 'b';
-const PIECE_TYPE = 'p' | 'r' | 'n' | 'b' | 'q' | 'k';
-const HEX_W = 0x808080;
-const HEX_B = 0x0f0f0f;
+import { ChessConfig, PIECE_TYPE, PIECE_COLOR } from '../../../config';
 
-class Piece extends Group {
+class Piece extends Object3D {
     /**
      * @param {PIECE_TYPE} type
-     * @param {*} model
+     * @param {GLTF} model
      * @param {PIECE_COLOR} color
-     * @param {*} initialPosition
+     * @param {{string: number}} initialPosition
+     * @param {number} number - the number corresponds to the multiples of the piece type
      */
     constructor(type, model, color, initialPosition, number) {
         super();
@@ -20,10 +18,11 @@ class Piece extends Group {
         const loader = new GLTFLoader();
 
         this.type = type;
+        this.name = `${color}${type}${number}`;
         this.color = color;
         this.model = model;
         this.number = number;
-        this.colorHex = color === 'w' ? HEX_W : HEX_B;
+        this.chessPos = initialPosition;
         this.hitbox = new Box3();
 
         loader.load(
@@ -42,6 +41,31 @@ class Piece extends Group {
         );
     }
 
+    /**
+     *  @param {GLTFLoader} loader
+     *  @returns {Promise<GLTF>}
+     */
+    initModel(loader) {
+        return new Promise((resolve, reject) => {
+            loader.load(
+                this.modelName,
+                (gltf) => {
+                    this.add(gltf.scene);
+                    this.model = gltf;
+                    this.mesh = gltf.scene.children[0];
+                    this.changeMaterial();
+                    if (this.color === 'b') this.mesh.rotateY(Math.PI);
+                    this.hitbox.setFromObject(this.mesh);
+                    resolve(gltf);
+                },
+                undefined,
+                (event) => {
+                    reject(event);
+                }
+            );
+        });
+    }
+
     changeMaterial() {
         this.mesh.traverse((o) => {
             if (!o.isMesh) {
@@ -53,12 +77,10 @@ class Piece extends Group {
             o.castShadow = true;
             o.receiveShadow = true;
 
-            const color = new Color().setHex(this.colorHex);
-
-            color.convertSRGBToLinear();
-            o.material = new MeshPhongMaterial({
-                color,
-            });
+            o.material =
+                this.color === 'w'
+                    ? ChessConfig.PIECE_WHITE_MATERIAL
+                    : ChessConfig.PIECE_BLACK_MATERIAL;
         });
     }
 }
