@@ -41,9 +41,9 @@ class ChessScene extends Scene {
     initScene() {
         const board = new Board(this.loader);
         this.add(board);
-        const pieceGenerator = new PieceGenerator(board, this.loader);
-        pieceGenerator.initPieces();
-        for (const p of pieceGenerator.getAllPieces()) {
+        this.pieceContainer = new PieceGenerator(board, this.loader);
+        this.pieceContainer.initPieces();
+        for (const p of this.pieceContainer.getAllPieces()) {
             this.add(p);
         }
     }
