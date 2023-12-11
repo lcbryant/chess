@@ -11,6 +11,10 @@ class Bishop extends Piece {
      */
     constructor(type, color, initialPosition, number) {
         super(type, MODEL, color, initialPosition, number);
+        this.name = 'bishop';
+        this.isChessPiece = true;
+        // Assuming initialPosition is an object with x and y properties
+        this.chessPosition = initialPosition;
     }
 }
 
