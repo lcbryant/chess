@@ -10,10 +10,12 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ChessScene } from 'scenes';
+import ChessController from './controllers/ChessController';
 
 // Initialize core ThreeJS components
 const chessScene = new ChessScene();
 const camera = new PerspectiveCamera();
+const controller = new ChessController(camera, chessScene);
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera
