@@ -72,17 +72,19 @@ class Piece extends Object3D {
         });
     }
 
-    // In Piece.js
     setSelected(selected) {
         this.isSelected = selected;
         this.traverse((o) => {
             if (!o.isMesh) return;
-            const color = selected ? 0xff0000 : (this.color === 'w' ? 0xffffff : 0x000000);
+            const color = selected
+                ? 0xff0000
+                : this.color === 'w'
+                ? 0xffffff
+                : 0x000000;
             console.log('Setting color for', o);
             o.material.color.set(color);
         });
     }
-
 
     update(chessPos) {}
 

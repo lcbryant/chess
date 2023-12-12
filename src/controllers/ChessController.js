@@ -1,8 +1,5 @@
 // ChessController.js
-import * as Dat from 'dat.gui';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Raycaster, Vector2 } from 'three';
-
 
 export default class ChessController {
     constructor(camera, scene) {
@@ -24,8 +21,7 @@ export default class ChessController {
         console.log('Mouse clicked');
         // Calculate mouse position in normalized device coordinates
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
+        this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         // Update the picking ray with the camera and mouse position
         this.raycaster.setFromCamera(this.mouse, this.camera);
@@ -40,12 +36,10 @@ export default class ChessController {
         // Calculate objects intersecting the picking ray
         const intersects = this.raycaster.intersectObjects(chessPieces, true);
 
-
         console.log(intersects);
         if (intersects.length > 0) {
             // Implement logic to select and move pieces
             this.selectOrMovePiece(intersects[0]);
-            
         }
     }
 
@@ -114,5 +108,4 @@ export default class ChessController {
         const worldZ = boardPosition.z * TILE_SIZE;
         return new Vector3(worldX, 0, worldZ); // Assuming the board is at y = 0
     }
-
 }
