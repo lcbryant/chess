@@ -54,6 +54,7 @@ class Board extends Group {
         const mesh = new Mesh(tile, material);
         mesh.position.copy(position);
         mesh.rotateX(-Math.PI / 2);
+        mesh.isTile = true;
         return mesh;
     }
 
