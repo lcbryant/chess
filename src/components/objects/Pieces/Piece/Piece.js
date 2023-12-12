@@ -79,9 +79,9 @@ class Piece extends Object3D {
         if (!o.isMesh) return;
 
         if (selected) {
-            // If the piece is selected, enhance its emissive property or add an effect
+            // If the piece is selected, enhance its emissive property
             o.material.emissive.setHex(0x444444); // Adjust the value as needed
-            o.material.emissiveIntensity = 1; // Increase the emissive intensity
+            o.material.emissiveIntensity = 2; // Increase the emissive intensity
         } else {
             // If the piece is not selected, reset to default
             o.material.emissive.setHex(0x000000); // Reset to no emissive color
