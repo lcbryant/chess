@@ -39,6 +39,7 @@ class ChessScene extends Scene {
 
     initScene() {
         const board = new Board(this.loader);
+        board.name = 'board';
         this.add(board);
         this.pieceContainer = new PieceGenerator(board, this.loader);
         this.pieceContainer.initPieces();

@@ -1,5 +1,6 @@
 import { Object3D } from 'three';
 import { Box3 } from 'three';
+import { Vector3 } from 'three';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 import {
@@ -73,18 +74,50 @@ class Piece extends Object3D {
     }
 
     setSelected(selected) {
-        this.isSelected = selected;
-        this.traverse((o) => {
-            if (!o.isMesh) return;
-            const color = selected
-                ? 0xff0000
-                : this.color === 'w'
-                ? 0xffffff
-                : 0x000000;
-            console.log('Setting color for', o);
-            o.material.color.set(color);
-        });
+    this.isSelected = selected;
+    this.traverse((o) => {
+        if (!o.isMesh) return;
+
+        if (selected) {
+            // If the piece is selected, enhance its emissive property or add an effect
+            o.material.emissive.setHex(0x444444); // Adjust the value as needed
+            o.material.emissiveIntensity = 1; // Increase the emissive intensity
+        } else {
+            // If the piece is not selected, reset to default
+            o.material.emissive.setHex(0x000000); // Reset to no emissive color
+            o.material.emissiveIntensity = 0.5; // Reset to original emissive intensity
+        }
+    });
+}
+
+getCurrentTile(board) {
+    const worldPosition = new Vector3();
+    this.getWorldPosition(worldPosition); // Convert local position to world position
+
+    // Translate world position to board coordinates
+    const boardPos = this.getBoardPositionFromWorldPosition(worldPosition);
+
+    if (boardPos.x >= 0 && boardPos.x < board.tileMatrix.length && boardPos.z >= 0 && boardPos.z < board.tileMatrix[boardPos.x].length) {
+        const tileId = board.tileMatrix[boardPos.x][boardPos.z];
+        return board.getObjectById(tileId);
+    } else {
+        console.error("Calculated board position is out of bounds:", boardPos.x, boardPos.z);
+        return null;  // Return null or handle this case as needed
     }
+}
+
+getBoardPositionFromWorldPosition(worldPosition) {
+    const tileSize = ChessConfig.TILE_SIZE;
+    const boardOrigin = ChessConfig.STARTING_VECTOR;
+
+    const column = Math.floor((boardOrigin.x - worldPosition.x) / tileSize);
+    const row = Math.floor((boardOrigin.z - worldPosition.z) / tileSize);
+
+    return { x: row, z: column };
+}
+
+
+
 
     update(chessPos) {}
 
