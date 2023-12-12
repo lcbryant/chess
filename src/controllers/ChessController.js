@@ -107,12 +107,4 @@ export default class ChessController {
         return true; // For now, all moves are considered valid
     }
 
-    getWorldPositionFromBoardPosition(boardPosition) {
-        // Translate board coordinates back to world coordinates
-        // This is a placeholder, you will need to implement this based on your board setup
-        const worldX = boardPosition.x * TILE_SIZE;
-        const worldZ = boardPosition.z * TILE_SIZE;
-        return new Vector3(worldX, 0, worldZ); // Assuming the board is at y = 0
-    }
-
 }
