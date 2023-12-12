@@ -1,17 +1,7 @@
 /**
  * Defines some constants for the chess game
  */
-import { Color, MeshPhongMaterial, MeshStandardMaterial } from 'three';
-
-export const PIECE_TYPE = {
-    KNIGHT: 'n',
-    ROOK: 'r',
-    BISHOP: 'b',
-    QUEEN: 'q',
-    KING: 'k',
-    PAWN: 'p',
-};
-export const PIECE_COLOR = { WHITE: 'w', BLACK: 'b' };
+import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from 'three';
 
 export class ChessPosition {
     constructor(row, column) {
@@ -21,6 +11,12 @@ export class ChessPosition {
 }
 
 class ChessConfig {
+    static get STARTING_VECTOR() {
+        const x = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
+        const z = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
+        return new Vector3(x, 0, z);
+    }
+
     static get BOARD_SIZE() {
         return 0.5;
     }
@@ -38,7 +34,7 @@ class ChessConfig {
     }
 
     static get TILE_WHITE_MATERIAL() {
-        const color = new Color('white');
+        const color = new Color('antiqueWhite');
         return new MeshStandardMaterial({ color });
     }
 
@@ -48,12 +44,14 @@ class ChessConfig {
     }
 
     static get PIECE_COLORS() {
-        return ['w', 'b'];
+        return { w: 'w', b: 'b' };
     }
 
     static get PIECE_WHITE_MATERIAL() {
-        const color = new Color(0x808080);
-        return new MeshPhongMaterial({ color });
+        const color = new Color(0x3f3f3f);
+        const mat = new MeshPhongMaterial({ color });
+        mat.shininess = 100;
+        return mat;
     }
 
     static get PIECE_BLACK_MATERIAL() {
@@ -62,32 +60,32 @@ class ChessConfig {
     }
 
     static get PIECE_TYPES() {
-        return ['p', 'r', 'n', 'b', 'q', 'k'];
+        return { p: 'p', r: 'r', n: 'n', b: 'b', q: 'q', k: 'k' };
     }
 
     static get CHESS_FIELD_COLUMNS() {
         return {
-            a: 7,
-            b: 6,
-            c: 5,
-            d: 4,
-            e: 3,
-            f: 2,
-            g: 1,
-            h: 0,
+            a: 0,
+            b: 1,
+            c: 2,
+            d: 3,
+            e: 4,
+            f: 5,
+            g: 6,
+            h: 7,
         };
     }
 
     static get CHESS_FIELD_LETTERS() {
         return {
-            7: 'a',
-            6: 'b',
-            5: 'c',
-            4: 'd',
-            3: 'e',
-            2: 'f',
-            1: 'g',
-            0: 'h',
+            0: 'a',
+            1: 'b',
+            2: 'c',
+            3: 'd',
+            4: 'e',
+            5: 'f',
+            6: 'g',
+            7: 'h',
         };
     }
 }

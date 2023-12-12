@@ -1,6 +1,6 @@
 import * as Dat from 'dat.gui';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Scene, Color, GridHelper, SpotLightHelper } from 'three';
+import { Scene, Color, GridHelper, SpotLightHelper, Raycaster } from 'three';
 import { Board, PieceGenerator } from 'objects';
 import { BasicLights } from 'lights';
 
@@ -20,7 +20,6 @@ class ChessScene extends Scene {
 
         const lights = new BasicLights();
         this.add(lights);
-        this.setUpHelpers();
         this.initScene();
     }
 
