@@ -1,6 +1,4 @@
 import { Object3D } from "three";
-import { Box3 } from "three";
-import { Vector3 } from "three";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 import {
@@ -27,8 +25,8 @@ class Piece extends Object3D {
         this.number = number;
         this.initChessPos = initialPosition;
         this.currChessPos = initialPosition;
-        this.hitbox = new Box3();
         this.isChessPiece = true;
+        this.captured = false;
     }
 
     /**
@@ -44,7 +42,6 @@ class Piece extends Object3D {
                     this.mesh = gltf.scene.children[0];
                     this.changeMaterial();
                     if (this.color === 'b') this.mesh.rotateY(Math.PI);
-                    this.hitbox.setFromObject(this.mesh);
                     resolve(gltf);
                 },
                 undefined,
@@ -91,41 +88,12 @@ class Piece extends Object3D {
     }
 
     getCurrentTile(board) {
-        const worldPosition = new Vector3();
-        this.getWorldPosition(worldPosition); // Convert local position to world position
-
-        // Translate world position to board coordinates
-        const boardPos = this.getBoardPositionFromWorldPosition(worldPosition);
-
-        if (
-            boardPos.x >= 0 &&
-            boardPos.x < board.tileMatrix.length &&
-            boardPos.z >= 0 &&
-            boardPos.z < board.tileMatrix[boardPos.x].length
-        ) {
-            const tileId = board.tileMatrix[boardPos.x][boardPos.z];
-            return board.getObjectById(tileId);
-        } else {
-            console.error(
-                'Calculated board position is out of bounds:',
-                boardPos.x,
-                boardPos.z
-            );
-            return null; // Return null or handle this case as needed
-        }
-    }
-
-    getBoardPositionFromWorldPosition(worldPosition) {
-        const tileSize = ChessConfig.TILE_SIZE;
-        const boardOrigin = ChessConfig.STARTING_VECTOR;
-
-        const column = Math.floor((boardOrigin.x - worldPosition.x) / tileSize);
-        const row = Math.floor((boardOrigin.z - worldPosition.z) / tileSize);
-
-        return { x: row, z: column };
+        return board.getTileByChessPosition(this.currChessPos);
     }
 
     update(chessPos) {}
+
+    capture() {}
 
     reset(position) {
         this.position.copy(position);

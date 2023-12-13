@@ -89,7 +89,7 @@ class ChessController {
             const tileCenter = tile.position.clone();
             tileCenter.y = this.selectedPiece.position.y;
             this.selectedPiece.position.copy(tileCenter);
-
+            this.selectedPiece.currChessPos = tile.userData.chessPosition;
             // TODO: Need to add logic to remove piece and display it to the side after it has been captured
         }
     }

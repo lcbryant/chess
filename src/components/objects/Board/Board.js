@@ -62,6 +62,16 @@ class Board extends Group {
             this.add(base);
         });
     }
+
+    /**
+     * @param {ChessPosition} chessPos
+     * @returns {Mesh}
+     */
+    getTileByChessPosition(chessPos) {
+        const { row, column } = chessPos;
+        const tileId = this.tileMatrix[row][column];
+        return this.getObjectById(tileId);
+    }
 }
 
 export default Board;
