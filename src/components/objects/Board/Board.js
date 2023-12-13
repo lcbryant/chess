@@ -1,6 +1,6 @@
-import { Group, Mesh, PlaneGeometry } from "three";
-import { ChessConfig, ChessPosition } from "../../config";
-import { BoardBase } from "./BoardBase";
+import { Group, Mesh, PlaneGeometry } from 'three';
+import { ChessConfig, ChessPosition } from '../../config';
+import { BoardBase } from './BoardBase';
 
 class Board extends Group {
     constructor(loader) {
@@ -29,7 +29,7 @@ class Board extends Group {
                     ? ChessConfig.TILE_BLACK_MATERIAL
                     : ChessConfig.TILE_WHITE_MATERIAL;
                 const tile = this.createTile(material, pos);
-                tile.userData.chessPosition = new ChessPosition(rowLetter, j);
+                tile.userData.chessPosition = new ChessPosition(i, j);
                 tile.name = `${rowLetter}${j + 1}`;
                 row.push(tile.id);
                 this.add(tile);

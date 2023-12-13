@@ -1,1 +1,1 @@
-export { default as ChessController } from './ChessController.js';
+export { default as ChessController } from './ChessController';
