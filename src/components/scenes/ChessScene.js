@@ -68,7 +68,7 @@ class ChessScene extends Scene {
 
     initCamera(aspectRatio) {
         this.camera = new PerspectiveCamera(75, aspectRatio, 0.1, 100);
-        this.camera.position.set(1, 1, 1);
+        this.camera.position.set(0, 0.5, 0.4);
         this.camera.lookAt(0, 0, 0);
     }
 
@@ -78,7 +78,7 @@ class ChessScene extends Scene {
         this.orbitControlsenableDamping = true;
         this.orbitControls.enablePan = false;
         this.orbitControls.minDistance = 0.5;
-        this.orbitControls.maxDistance = 1.5;
+        this.orbitControls.maxDistance = 1.0;
         this.orbitControls.update();
 
         // set up mouse controls
