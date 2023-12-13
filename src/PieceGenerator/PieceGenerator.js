@@ -1,6 +1,15 @@
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { Bishop, Board, King, Knight, Pawn, Queen, Rook } from "../";
-import { ChessConfig, ChessPosition } from "../../../config";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { ChessConfig, ChessPosition } from '../components/config';
+
+import {
+    Bishop,
+    Board,
+    King,
+    Knight,
+    Pawn,
+    Queen,
+    Rook,
+} from '../components/objects/Pieces';
 
 class PieceGenerator {
     /**
@@ -20,8 +29,7 @@ class PieceGenerator {
     initPawns(color) {
         const pawns = [];
         const pawnType = ChessConfig.PIECE_TYPES.p;
-        const rowLetter = color === 'w' ? 'b' : 'g';
-        const row = this.board.chessFieldColumns[rowLetter];
+        const row = color === 'w' ? 1 : 6;
         for (let i = 0; i < 8; i++) {
             const algebraicPos = new ChessPosition(row, i);
             const pawn = new Pawn(pawnType, color, algebraicPos, i + 1);
@@ -170,9 +178,7 @@ class PieceGenerator {
     }
 
     getMajorPieceInitialRow(color) {
-        return color === 'w'
-            ? this.board.chessFieldColumns.a
-            : this.board.chessFieldColumns.h;
+        return color === 'w' ? 0 : 7;
     }
 
     /**

@@ -1,6 +1,6 @@
-import { LoadingManager, ReinhardToneMapping, WebGLRenderer } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { ChessScene } from "../components/scenes";
+import { LoadingManager, ReinhardToneMapping, WebGLRenderer } from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { ChessScene } from '../scenes';
 
 /**
  * Core game class that initializes and handles the renderer, scene, and game loop

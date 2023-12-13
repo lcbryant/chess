@@ -1,9 +1,10 @@
-import * as Dat from "dat.gui";
-import ChessController from "../controllers/ChessController";
-import { BasicLights } from "lights";
-import { Board, PieceGenerator } from "objects";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { ChessConfig } from "../config";
+import * as Dat from 'dat.gui';
+import { BasicLights } from 'lights';
+import { Board } from 'objects';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { PieceGenerator } from '../PieceGenerator';
+import { ChessConfig } from '../components/config';
+import { ChessController } from '../components/controllers';
 
 import {
     Scene,

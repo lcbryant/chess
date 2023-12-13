@@ -1,10 +1,15 @@
-import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from "three";
+import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from 'three';
 
 /**
  * Defines some constants for the chess game
  */
 
 export class ChessPosition {
+    /**
+     * For simplicity, this class stores the index of the indices of the tile in the Board.tileMatrix
+     * @param {number} row
+     * @param {number} column
+     */
     constructor(row, column) {
         this.row = row;
         this.column = column;
