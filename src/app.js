@@ -1,3 +1,5 @@
+import { Game } from "./Game";
+
 /**
  * app.js
  *
@@ -7,53 +9,13 @@
  *
  */
 
-import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { ChessScene } from 'scenes';
-import ChessController from './controllers/ChessController';
-
-// Initialize core ThreeJS components
-const chessScene = new ChessScene();
-const camera = new PerspectiveCamera();
-const controller = new ChessController(camera, chessScene);
-const renderer = new WebGLRenderer({ antialias: true });
-
-// Set up camera
-camera.position.set(1, 1, 1);
-camera.lookAt(new Vector3(0, 0, 0));
-
-// Set up renderer, canvas, and minor CSS adjustments
-renderer.setPixelRatio(window.devicePixelRatio);
-const canvas = renderer.domElement;
-canvas.style.display = 'block'; // Removes padding below canvas
-document.body.style.margin = 0; // Removes margin around page
-document.body.style.overflow = 'hidden'; // Fix scrolling
-document.body.appendChild(canvas);
-
-// Set up controls
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 1;
-controls.maxDistance = 2;
-controls.update();
+// Initialize core Game class
+const game = new Game();
 
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
-    controls.update();
-    renderer.render(chessScene, camera);
-    chessScene.update && chessScene.update(timeStamp);
+    game.update(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
+
 window.requestAnimationFrame(onAnimationFrameHandler);
-
-// Resize Handler
-const windowResizeHandler = () => {
-    const { innerHeight, innerWidth } = window;
-    renderer.setSize(innerWidth, innerHeight);
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
-};
-
-windowResizeHandler();
-window.addEventListener('resize', windowResizeHandler, false);

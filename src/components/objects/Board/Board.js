@@ -1,28 +1,26 @@
-import { Group, PlaneGeometry, Mesh } from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-
-import MODEL from '../../../assets/board_base.glb';
-import { ChessConfig, ChessPosition } from '../../config';
+import { Group, Mesh, PlaneGeometry } from "three";
+import { ChessConfig, ChessPosition } from "../../config";
+import { BoardBase } from "./BoardBase";
 
 class Board extends Group {
     constructor(loader) {
         super();
         this.name = 'board';
-        const baseModel = this.initBaseModel(loader);
-        this.add(baseModel);
+        this.loader = loader;
+        this.boardBase = new BoardBase('boardBase');
         this.chessFieldColumns = ChessConfig.CHESS_FIELD_COLUMNS;
         this.chessFieldLetters = ChessConfig.CHESS_FIELD_LETTERS;
-        this.createBoard();
+        this.initBoard();
+        this.initBoardBase();
     }
 
     /**
      * Creates 64 tiles and adds them to the board and their id to the tileMatrix
-     * @returns {Mesh} chessBoard
      */
-    createBoard() {
+    initBoard() {
         this.tileMatrix = [];
         let black = false;
-        let pos = ChessConfig.STARTING_VECTOR;
+        let pos = ChessConfig.TILE_STARTING_VECTOR;
         for (let i = 0; i < ChessConfig.DIVISIONS; i++) {
             const row = [];
             const rowLetter = this.chessFieldLetters[i];
@@ -40,7 +38,7 @@ class Board extends Group {
             }
             this.tileMatrix.push(row);
             black = !black;
-            pos.x = ChessConfig.STARTING_VECTOR.x;
+            pos.x = ChessConfig.TILE_STARTING_VECTOR.x;
             pos.z -= ChessConfig.TILE_SIZE;
         }
     }
@@ -58,23 +56,10 @@ class Board extends Group {
         return mesh;
     }
 
-    /**
-     *  @param {GLTFLoader} loader
-     *  @returns {Promise<GLTF>}
-     */
-    initBaseModel(loader) {
-        return new Promise((resolve, reject) => {
-            loader.load(
-                MODEL,
-                (gltf) => {
-                    this.add(gltf.scene);
-                    resolve(gltf);
-                },
-                undefined,
-                (event) => {
-                    reject(event);
-                }
-            );
+    initBoardBase() {
+        this.boardBase.initModel(this.loader).then((model) => {
+            const base = model.scene;
+            this.add(base);
         });
     }
 }

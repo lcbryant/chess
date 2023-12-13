@@ -1,6 +1,6 @@
-import MODEL from '../../../../assets/queen.glb';
-import { Piece } from '../Piece';
-import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from '../../../config';
+import MODEL from "../../../../assets/queen.glb";
+import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from "../../../config";
+import { Piece } from "../Piece";
 
 class Queen extends Piece {
     /**
@@ -11,7 +11,6 @@ class Queen extends Piece {
      */
     constructor(type, color, initialPosition, number) {
         super(type, MODEL, color, initialPosition, number);
-        this.name = 'queen';
     }
 }
 

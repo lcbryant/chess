@@ -1,7 +1,8 @@
+import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from "three";
+
 /**
  * Defines some constants for the chess game
  */
-import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from 'three';
 
 export class ChessPosition {
     constructor(row, column) {
@@ -11,7 +12,11 @@ export class ChessPosition {
 }
 
 class ChessConfig {
-    static get STARTING_VECTOR() {
+    static get SCENE_BACKGROUND() {
+        return new Color('steelBlue');
+    }
+
+    static get TILE_STARTING_VECTOR() {
         const x = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
         const z = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
         return new Vector3(x, 0, z);
@@ -34,12 +39,12 @@ class ChessConfig {
     }
 
     static get TILE_WHITE_MATERIAL() {
-        const color = new Color('antiqueWhite');
+        const color = new Color('antiqueWhite').convertSRGBToLinear();
         return new MeshStandardMaterial({ color });
     }
 
     static get TILE_BLACK_MATERIAL() {
-        const color = new Color('black');
+        const color = new Color('black').convertSRGBToLinear();
         return new MeshStandardMaterial({ color });
     }
 
@@ -48,14 +53,14 @@ class ChessConfig {
     }
 
     static get PIECE_WHITE_MATERIAL() {
-        const color = new Color(0x3f3f3f);
+        const color = new Color(0x808080).convertSRGBToLinear();
         const mat = new MeshPhongMaterial({ color });
         mat.shininess = 100;
         return mat;
     }
 
     static get PIECE_BLACK_MATERIAL() {
-        const color = new Color(0x0f0f0f);
+        const color = new Color(0x0f0f0f).convertSRGBToLinear();
         return new MeshPhongMaterial({ color });
     }
 

@@ -1,6 +1,6 @@
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Board, Pawn, Rook, Knight, Bishop, King, Queen } from '../';
-import { ChessPosition, ChessConfig } from '../../../config';
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Bishop, Board, King, Knight, Pawn, Queen, Rook } from "../";
+import { ChessConfig, ChessPosition } from "../../../config";
 
 class PieceGenerator {
     /**

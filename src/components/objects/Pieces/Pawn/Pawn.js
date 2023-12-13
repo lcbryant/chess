@@ -11,8 +11,6 @@ class Pawn extends Piece {
      */
     constructor(type, color, initialPosition, number) {
         super(type, MODEL, color, initialPosition, number);
-        this.name = 'pawn';
-
     }
 }
 
