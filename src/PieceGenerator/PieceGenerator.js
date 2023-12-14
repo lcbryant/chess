@@ -35,6 +35,7 @@ class PieceGenerator {
             const pawn = new Pawn(pawnType, color, algebraicPos, i + 1);
             const pos = this.board.getObjectById(this.tileIds[row][i]).position;
             pawn.position.copy(pos);
+            pawn.initWorldPos.copy(pos);
             pawn.initModel(this.loader);
             pawns.push(pawn);
         }
@@ -69,6 +70,7 @@ class PieceGenerator {
             this.tileIds[chessPos.row][chessPos.column]
         ).position;
         rook.position.copy(pos);
+        rook.initWorldPos.copy(pos);
         rook.initModel(this.loader);
         return rook;
     }
@@ -101,6 +103,7 @@ class PieceGenerator {
             this.tileIds[chessPos.row][chessPos.column]
         ).position;
         knight.position.copy(pos);
+        knight.initWorldPos.copy(pos);
         knight.initModel(this.loader);
         return knight;
     }
@@ -133,6 +136,7 @@ class PieceGenerator {
             this.tileIds[chessPos.row][chessPos.column]
         ).position;
         bishop.position.copy(pos);
+        bishop.initWorldPos.copy(pos);
         bishop.initModel(this.loader);
         return bishop;
     }
@@ -153,6 +157,7 @@ class PieceGenerator {
             this.tileIds[queen.initChessPos.row][queen.initChessPos.column]
         ).position;
         queen.position.copy(pos);
+        queen.initWorldPos.copy(pos);
         queen.initModel(this.loader);
         return [queen];
     }
@@ -173,6 +178,7 @@ class PieceGenerator {
             this.tileIds[king.initChessPos.row][king.initChessPos.column]
         ).position;
         king.position.copy(pos);
+        king.initWorldPos.copy(pos);
         king.initModel(this.loader);
         return [king];
     }
@@ -217,9 +223,9 @@ class PieceGenerator {
     resetPieces() {
         const pieces = this.getAllPieces();
         for (const piece of pieces) {
-            const row = piece.initChessPos.row;
-            const column = piece.initChessPos.column;
-            piece.reset(this.positions[row][column]);
+            if (piece.isChessPiece) {
+                piece.reset();
+            }
         }
     }
 }

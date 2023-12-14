@@ -110,6 +110,13 @@ class ChessScene extends Scene {
         this.chessController.whiteCapturesControl = capturesFolder.add(this.chessController, 'whiteCapturesString').name('White Captures');
         this.chessController.blackCapturesControl = capturesFolder.add(this.chessController, 'blackCapturesString').name('Black Captures');
         capturesFolder.open();
+
+        this.state.gui.add(this, 'resetBoard').name('Reset Board');
+    }
+
+    resetBoard() {
+        // refresh the page
+        location.reload();
     }
 
 

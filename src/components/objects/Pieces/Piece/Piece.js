@@ -27,6 +27,7 @@ class Piece extends Object3D {
         this.currChessPos = initialPosition;
         this.isChessPiece = true;
         this.captured = false;
+        this.initWorldPos = new Vector3();
     }
 
     /**
@@ -99,15 +100,18 @@ class Piece extends Object3D {
     
         // Mark the piece as captured
         this.captured = true;
+
     }
 
     isCaptured() {
         return this.captured;
     }
 
-    reset(position) {
-        this.position.copy(position);
-        this.currentChessPos = this.intialChessPos;
+    reset() {
+        // Reset the chess position of the piece to its initial position
+        this.position.copy(this.initWorldPos);
+
+        this.captured = false;
     }
 }
 
