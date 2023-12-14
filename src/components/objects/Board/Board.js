@@ -1,5 +1,5 @@
 import { Group, Mesh, PlaneGeometry } from 'three';
-import { ChessConfig, ChessPosition } from '../../config';
+import { ChessConfig, ChessPosition } from '../../../config';
 import { BoardBase } from './BoardBase';
 
 class Board extends Group {
@@ -21,35 +21,47 @@ class Board extends Group {
         this.tileMatrix = [];
         let black = false;
         let pos = ChessConfig.TILE_STARTING_VECTOR;
-        for (let i = 0; i < ChessConfig.DIVISIONS; i++) {
-            const row = [];
-            const rowLetter = this.chessFieldLetters[i];
-            for (let j = 0; j < ChessConfig.DIVISIONS; j++) {
-                const material = black
+        for (let row = ChessConfig.DIVISIONS - 1; row >= 0; row--) {
+            const rowArray = [];
+            for (let col = 0; col < ChessConfig.DIVISIONS; col++) {
+                let material = black
                     ? ChessConfig.TILE_BLACK_MATERIAL
                     : ChessConfig.TILE_WHITE_MATERIAL;
                 const tile = this.createTile(material, pos);
-                tile.userData.chessPosition = new ChessPosition(i, j);
-                tile.name = `${rowLetter}${j + 1}`;
-                row.push(tile.id);
+                tile.userData.chessPosition = new ChessPosition(row, col);
+                tile.name = tile.userData.chessPosition.toAlgebraicNotation();
+                rowArray.push(tile.id);
                 this.add(tile);
                 black = !black;
-                pos.x -= ChessConfig.TILE_SIZE;
+                pos.x += ChessConfig.TILE_SIZE;
             }
-            this.tileMatrix.push(row);
+            this.tileMatrix.push(rowArray);
             black = !black;
             pos.x = ChessConfig.TILE_STARTING_VECTOR.x;
-            pos.z -= ChessConfig.TILE_SIZE;
+            pos.z += ChessConfig.TILE_SIZE;
         }
     }
 
+    generateTextBoard() {
+        let textBoard = '| ';
+        for (let i = 0; i < this.tileMatrix.length; i++) {
+            for (let j = 0; j < this.tileMatrix[i].length; j++) {
+                const tile = this.getObjectById(this.tileMatrix[i][j]);
+                textBoard += tile.name + ' | ';
+            }
+            if (i < this.tileMatrix.length - 1)
+                textBoard += '\n-----------------------------------------\n| ';
+        }
+        return textBoard;
+    }
+
     createTile(material, position) {
-        const tile = new PlaneGeometry(
+        const tileGeometry = new PlaneGeometry(
             ChessConfig.TILE_SIZE,
             ChessConfig.TILE_SIZE
         );
-        tile.receiveShadow = true;
-        const mesh = new Mesh(tile, material);
+        tileGeometry.receiveShadow = true;
+        const mesh = new Mesh(tileGeometry, material);
         mesh.position.copy(position);
         mesh.rotateX(-Math.PI / 2);
         mesh.isTile = true;
@@ -71,6 +83,12 @@ class Board extends Group {
         const { row, column } = chessPos;
         const tileId = this.tileMatrix[row][column];
         return this.getObjectById(tileId);
+    }
+
+    markTileForMove(chessPos) {
+        const tile = this.getTileByChessPosition(chessPos);
+        tile.material.emissive.setColorName('yellow');
+        tile.material.emissiveIntensity = 0.75;
     }
 }
 

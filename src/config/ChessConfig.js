@@ -14,6 +14,10 @@ export class ChessPosition {
         this.row = row;
         this.column = column;
     }
+
+    toAlgebraicNotation() {
+        return `${ChessConfig.CHESS_FIELD_LETTERS[this.column]}${this.row + 1}`;
+    }
 }
 
 class ChessConfig {
@@ -22,8 +26,8 @@ class ChessConfig {
     }
 
     static get TILE_STARTING_VECTOR() {
-        const x = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
-        const z = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
+        const x = -ChessConfig.BOARD_SIZE / 2 + ChessConfig.TILE_SIZE / 2;
+        const z = -ChessConfig.BOARD_SIZE / 2 + ChessConfig.TILE_SIZE / 2;
         return new Vector3(x, 0, z);
     }
 
@@ -73,6 +77,9 @@ class ChessConfig {
         return { p: 'p', r: 'r', n: 'n', b: 'b', q: 'q', k: 'k' };
     }
 
+    /**
+     * Maps the column letter to the index of the column in the tileMatrix
+     */
     static get CHESS_FIELD_COLUMNS() {
         return {
             a: 0,

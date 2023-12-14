@@ -2,9 +2,10 @@ import * as Dat from 'dat.gui';
 import { BasicLights } from 'lights';
 import { Board } from 'objects';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { ChessGameEngine } from '../ChessGameEngine';
 import { PieceGenerator } from '../PieceGenerator';
-import { ChessConfig } from '../components/config';
 import { ChessController } from '../components/controllers';
+import { ChessConfig } from '../config';
 
 import {
     Scene,
@@ -34,6 +35,7 @@ class ChessScene extends Scene {
         this.setUpWindowResizing();
         this.initControls(this.camera, renderer.domElement);
         this.initScene();
+        this.initEngine();
     }
 
     addToUpdateList(object) {
@@ -93,13 +95,16 @@ class ChessScene extends Scene {
 
     initScene() {
         const board = new Board(this.loader);
-        board.name = 'board';
         this.add(board);
         this.pieceContainer = new PieceGenerator(board, this.loader);
         this.pieceContainer.initPieces();
         for (const p of this.pieceContainer.getAllPieces()) {
             this.add(p);
         }
+    }
+
+    initEngine() {
+        this.engine = new ChessGameEngine();
     }
 }
 

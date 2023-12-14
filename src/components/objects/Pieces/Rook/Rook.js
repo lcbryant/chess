@@ -1,6 +1,6 @@
-import MODEL from "../../../../assets/rook.glb";
-import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from "../../../config";
-import { Piece } from "../Piece";
+import MODEL from '../../../../assets/rook.glb';
+import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from '../../../../config';
+import { Piece } from '../Piece';
 
 class Rook extends Piece {
     /**

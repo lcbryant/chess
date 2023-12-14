@@ -1,6 +1,6 @@
 import MODEL from '../../../../assets/king.glb';
+import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from '../../../../config';
 import { Piece } from '../Piece';
-import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from '../../../config';
 
 class King extends Piece {
     /**
