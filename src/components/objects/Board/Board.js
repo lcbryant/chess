@@ -80,6 +80,7 @@ class Board extends Group {
      * @returns {Mesh}
      */
     getTileByChessPosition(chessPos) {
+        console.log("ChessPos: ", chessPos);
         const { row, column } = chessPos;
         const tileId = this.tileMatrix[row][column];
         return this.getObjectById(tileId);
