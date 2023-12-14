@@ -34,6 +34,8 @@ class ChessScene extends Scene {
         this.setUpWindowResizing();
         this.initControls(this.camera, renderer.domElement);
         this.initScene();
+        this.initCapturesGUI();
+
     }
 
     addToUpdateList(object) {
@@ -101,6 +103,16 @@ class ChessScene extends Scene {
             this.add(p);
         }
     }
+
+    // In ChessScene.js
+    initCapturesGUI() {
+        const capturesFolder = this.state.gui.addFolder('Captured Pieces');
+        this.chessController.whiteCapturesControl = capturesFolder.add(this.chessController, 'whiteCapturesString').name('White Captures');
+        this.chessController.blackCapturesControl = capturesFolder.add(this.chessController, 'blackCapturesString').name('Black Captures');
+        capturesFolder.open();
+    }
+
+
 }
 
 export default ChessScene;
