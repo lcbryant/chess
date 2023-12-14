@@ -1,6 +1,6 @@
 import MODEL from '../../../../assets/pawn.glb';
+import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from '../../../../config';
 import { Piece } from '../Piece';
-import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from '../../../config';
 
 class Pawn extends Piece {
     /**

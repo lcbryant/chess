@@ -1,12 +1,13 @@
-import { Object3D, Vector3 } from "three";
-import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Object3D } from 'three';
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 
 import {
     ChessConfig,
     ChessPosition,
     PIECE_TYPE,
     PIECE_COLOR,
-} from '../../../config';
+} from '../../../../config';
 
 class Piece extends Object3D {
     /**

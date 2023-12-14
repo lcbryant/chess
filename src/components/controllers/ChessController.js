@@ -1,4 +1,4 @@
-import { Vector2 } from "three";
+import { Vector2 } from 'three';
 
 // ChessController.js
 
@@ -45,6 +45,7 @@ class ChessController {
         const intersects = this.raycaster.intersectObjects(chessPieces, true);
 
         console.log(intersects);
+
         if (intersects.length > 0) {
             // Implement logic to select and move pieces
             this.selectOrMovePiece(intersects[0]);
@@ -144,37 +145,6 @@ class ChessController {
         // Check the rules for the specific piece and determine if the move is valid
         return true; // For now, all moves are considered valid
     }
-
-    getWorldPositionFromBoardPosition(boardPosition) {
-        // Translate board coordinates back to world coordinates
-        const worldX = boardPosition.x * TILE_SIZE;
-        const worldZ = boardPosition.z * TILE_SIZE;
-        return new Vector3(worldX, 0, worldZ); // Assuming the board is at y = 0
-    }
-
-    getBoardPositionFromWorldPosition(worldPosition) {
-        const tileSize = ChessConfig.TILE_SIZE;
-        const boardOrigin = ChessConfig.STARTING_VECTOR;
-
-        const column = Math.floor((boardOrigin.x - worldPosition.x) / tileSize);
-        const row = Math.floor((boardOrigin.z - worldPosition.z) / tileSize);
-
-        return { x: row, z: column };
-    }
-
-    // In ChessController.js
-    updateCapturesGUI() {
-        if (this.whiteCapturesControl) {
-            this.whiteCapturesControl.updateDisplay();
-        }
-        if (this.blackCapturesControl) {
-            this.blackCapturesControl.updateDisplay();
-        }
-    }
-
-
-    
-    
 }
 
 export default ChessController;
