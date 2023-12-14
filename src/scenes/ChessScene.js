@@ -21,7 +21,7 @@ class ChessScene extends Scene {
         this.loader = loader;
 
         this.state = {
-            gui: new Dat.GUI(),
+            gui: new Dat.GUI({width: 420}), // width needed to have space for every potential captured piece
             rotationSpeed: 1,
             updateList: [],
         };
