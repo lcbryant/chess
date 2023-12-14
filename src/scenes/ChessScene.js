@@ -22,7 +22,7 @@ class ChessScene extends Scene {
         this.loader = loader;
 
         this.state = {
-            gui: new Dat.GUI(),
+            gui: new Dat.GUI({width: 420}), // width needed to have space for every potential captured piece
             rotationSpeed: 1,
             updateList: [],
         };
@@ -36,6 +36,7 @@ class ChessScene extends Scene {
         this.initControls(this.camera, renderer.domElement);
         this.initScene();
         this.initEngine();
+        this.initCapturesGUI();
     }
 
     addToUpdateList(object) {
@@ -103,8 +104,17 @@ class ChessScene extends Scene {
         }
     }
 
+
     initEngine() {
         this.engine = new ChessGameEngine();
+    }
+
+    // In ChessScene.js
+    initCapturesGUI() {
+        const capturesFolder = this.state.gui.addFolder('Captured Pieces');
+        this.chessController.whiteCapturesControl = capturesFolder.add(this.chessController, 'whiteCapturesString').name('White Captures');
+        this.chessController.blackCapturesControl = capturesFolder.add(this.chessController, 'blackCapturesString').name('Black Captures');
+        capturesFolder.open();
     }
 }
 

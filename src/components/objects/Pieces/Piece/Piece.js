@@ -1,6 +1,7 @@
 import { Object3D } from 'three';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
+
 import {
     ChessConfig,
     ChessPosition,
@@ -93,7 +94,17 @@ class Piece extends Object3D {
 
     update(chessPos) {}
 
-    capture() {}
+    capture() {
+        // Remove the piece from the board
+        this.parent.remove(this);
+    
+        // Mark the piece as captured
+        this.captured = true;
+    }
+
+    isCaptured() {
+        return this.captured;
+    }
 
     reset(position) {
         this.position.copy(position);
@@ -102,3 +113,4 @@ class Piece extends Object3D {
 }
 
 export default Piece;
+
