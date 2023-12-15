@@ -70,9 +70,9 @@ class ChessScene extends Scene {
             }
         }
         // would Ideally like to have this spinning but it causes the whiteTurnCamera and blackTurnCamera to be funky
-//        else {
-//            this.rotation.y = (timeStamp / 10000) * this.state.rotationSpeed;
-//        }
+        /*else {
+            this.rotation.y = (timeStamp / 10000) * this.state.rotationSpeed;
+        }*/
 
         this.camera.updateProjectionMatrix();
         this.renderer.render(this, this.camera);
