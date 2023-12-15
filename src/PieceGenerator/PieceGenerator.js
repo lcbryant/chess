@@ -36,6 +36,7 @@ class PieceGenerator {
                 pawnType,
                 color,
                 tile.userData.chessPosition,
+                tile.position,
                 col + 1
             );
             pawn.position.copy(tile.position);
@@ -70,6 +71,7 @@ class PieceGenerator {
             ChessConfig.PIECE_TYPES.r,
             color,
             tile.userData.chessPosition,
+            tile.position,
             number
         );
 
@@ -103,6 +105,7 @@ class PieceGenerator {
             ChessConfig.PIECE_TYPES.n,
             color,
             tile.userData.chessPosition,
+            tile.position,
             number
         );
         knight.position.copy(tile.position);
@@ -135,6 +138,7 @@ class PieceGenerator {
             ChessConfig.PIECE_TYPES.b,
             color,
             tile.userData.chessPosition,
+            tile.position,
             number
         );
         bishop.position.copy(tile.position);
@@ -153,6 +157,7 @@ class PieceGenerator {
             ChessConfig.PIECE_TYPES.q,
             color,
             tile.userData.chessPosition,
+            tile.position,
             1
         );
         queen.position.copy(tile.position);
@@ -171,6 +176,7 @@ class PieceGenerator {
             ChessConfig.PIECE_TYPES.k,
             color,
             tile.userData.chessPosition,
+            tile.position,
             1
         );
         king.position.copy(tile.position);

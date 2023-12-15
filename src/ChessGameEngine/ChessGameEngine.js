@@ -15,6 +15,7 @@ class ChessGameEngine {
         this.pieces = pieces;
         this.state = state;
         this.selectedPiece = null;
+        this.selectedPieceStartingWorldPosition = null;
     }
 
     anyPieceSelected() {
@@ -42,7 +43,6 @@ class ChessGameEngine {
      * If a piece is not selected, and the user clicks on a tile,
      * then nothing happens.
      */
-
     handlePieceClick(piece) {
         if (this.anyPieceSelected()) {
             if (piece === this.selectedPiece) {
@@ -87,6 +87,7 @@ class ChessGameEngine {
         if (!legalMoves.length) return;
 
         this.selectedPiece = piece;
+        this.selectedPieceStartingWorldPosition = piece.position.clone();
         piece.select();
 
         legalMoves.forEach((move) => {
@@ -100,6 +101,7 @@ class ChessGameEngine {
         this.selectedPiece.deselect();
         this.board.unmarkTiles();
         this.selectedPiece = null;
+        this.selectedPieceStartingWorldPosition = null;
     }
 
     /**
@@ -149,14 +151,48 @@ class ChessGameEngine {
         }
     }
 
+    /**
+     * Undoes the last move made on the current player's turn.
+     * @returns
+     */
     undoMove() {
+        if (!this.state.moveMade) return;
         const lastMove = this.gameInstance.undo();
-        console.log(lastMove);
+        if (!lastMove) return false;
+        const piece = this.pieces.find(
+            (ele) =>
+                ele.chessPosition.toAlgebraicNotation() === lastMove.to &&
+                ele.color === lastMove.color
+        );
+        const fromPosition = this.board.algebraicToIndices(lastMove.from);
+
+        piece.move(this.selectedPieceStartingWorldPosition, fromPosition);
         this.state.moveMade = false;
+        this.selectedPieceStartingWorldPosition = null;
+
+        if (lastMove.captured) {
+            let capturedPiece = null;
+            if (lastMove.color === 'w') {
+                capturedPiece = this.state.whiteCaptures.pop();
+            } else {
+                capturedPiece = this.state.blackCaptures.pop();
+            }
+
+            const toPosition = this.board.getTileByAlgebraicNotation(
+                lastMove.to
+            );
+
+            capturedPiece.reset();
+            capturedPiece.move(
+                toPosition.position,
+                toPosition.userData.chessPosition
+            );
+        }
     }
 
     endTurn() {
         this.state.moveMade = false;
+        this.selectedPieceStartingWorldPosition = null;
         this.state.turn = this.currentTurn();
     }
 

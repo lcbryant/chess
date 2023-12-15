@@ -118,6 +118,12 @@ class Board extends Group {
 
         this.markedTiles = [];
     }
+
+    algebraicToIndices(position) {
+        const column = this.chessFieldColumns[position[0]];
+        const row = parseInt(position[1]) - 1;
+        return new ChessPosition(row, column);
+    }
 }
 
 export default Board;

@@ -13,17 +13,26 @@ class Piece extends Object3D {
      * @param {PIECE_TYPE} type
      * @param {GLTF} model
      * @param {PIECE_COLOR} color
-     * @param {ChessPosition} initialPosition
+     * @param {ChessPosition} initialChessPosition
+     * @param {Vector3} initialWorldPositon
      * @param {number} number - the number corresponds to the multiples of the piece type
      */
-    constructor(type, model, color, initialPosition, number) {
+    constructor(
+        type,
+        model,
+        color,
+        initialChessPosition,
+        initialWorldPositon,
+        number
+    ) {
         super();
         this.type = type;
         this.name = `${color}${type}${number}`;
         this.color = color;
         this.model = model;
         this.number = number;
-        this.chessPosition = initialPosition;
+        this.chessPosition = initialChessPosition;
+        this.initialWorldPosition = initialWorldPositon;
         this.selected = false;
         this.captured = false;
     }
@@ -120,7 +129,7 @@ class Piece extends Object3D {
     reset() {
         // Reset the chess position of the piece to its initial position
         this.visible = true;
-        this.position.copy(this.initWorldPos);
+        this.position.copy(this.initialWorldPosition);
         this.captured = false;
     }
 }
