@@ -1,13 +1,18 @@
 import { Chess } from "chess.js";
 import { Board, Piece } from "objects";
+import { GameState } from "../config";
 
 /**
- * The ChessGameEngine class is responsible for managing the state of the chess game.
+ * ChessGameEngine is responsible for managing the state and interactions of a 3D chess game.
+ * It integrates with the chess.js library to handle game logic and manages the 3D representation of the game.
  */
 class ChessGameEngine {
     /**
-     * @param {Board} board
-     * @param {Array<Piece>} pieces
+     * Constructs a new ChessGameEngine instance.
+     *
+     * @param {Board} board The 3D chess board.
+     * @param {Array<Piece>} pieces The array of chess pieces.
+     * @param {GameState} state The game state object to track captures, turns, and moves.
      */
     constructor(board, pieces, state) {
         this.gameInstance = new Chess();
@@ -18,30 +23,20 @@ class ChessGameEngine {
         this.selectedPieceStartingWorldPosition = null;
     }
 
+    /**
+     * Checks if any piece is currently selected.
+     *
+     * @returns {boolean} True if a piece is selected, false otherwise.
+     */
     anyPieceSelected() {
         return !!this.selectedPiece;
     }
 
     /**
-     * Scenarios: piece is selected, piece is not selected
-     * If a piece is selected, and the user clicks on another piece
-     * of their own color, then the new piece is selected.
-     * If a piece is selected, and the user clicks on a legal tile, then
-     * the selected piece is moved to the tile.
-     * If a piece is selected, and the user clicks on the same piece,
-     * then the piece is deselected.
-     * If a piece is selected, and the user clicks on a piece
-     * of the opposite color that is a legal move, then the piece
-     * is moved to the tile and the opposite piece is captured.
-     * If a piece is selected, and the user clicks on a piece
-     * of the opposite color that is not a legal move, then nothing
-     * happens.
-     * If a piece is selected, and the user clicks on an illegal tile,
-     * then nothing happens.
-     * If a piece is not selected, and the user clicks on a piece
-     * of their own color, then the piece is selected.
-     * If a piece is not selected, and the user clicks on a tile,
-     * then nothing happens.
+     * Handles the logic for when a chess piece is clicked. This method controls
+     * the selection, deselection, and movement of pieces based on various scenarios.
+     *
+     * @param {Piece} piece The piece that was clicked.
      */
     handlePieceClick(piece) {
         if (this.anyPieceSelected()) {
@@ -74,7 +69,10 @@ class ChessGameEngine {
     }
 
     /**
-     * @param {*} piece - the piece to select
+     * Selects a piece on the board. This method highlights possible legal moves
+     * for the selected piece and updates the game state accordingly.
+     *
+     * @param {Piece} piece The piece to be selected.
      */
     selectPiece(piece) {
         if (piece.color !== this.currentTurn()) return;
@@ -105,16 +103,11 @@ class ChessGameEngine {
     }
 
     /**
-     * Scenarios: tile is empty, tile is occupied by a piece of the opposite color
-     * Tile is empty: move the piece to the tile
-     * Tile is occupied by a piece of the opposite color: move the piece to the tile
-     * and capture the piece
+     * Handles the movement of a piece to a tile. This method manages both simple moves
+     * and captures, updating the game state as needed.
      *
-     * Already validated that the move is legal, so no need to check again
-     */
-    /**
-     * @param {*} tile - the tile to move to
-     * @param {*} piece - the piece occupying the tile
+     * @param {Tile} tile The tile to move the piece to.
+     * @param {Piece} piece (optional) The piece occupying the target tile, if any.
      */
     handlePieceMove(tile, piece) {
         if (!!piece) {
@@ -124,6 +117,12 @@ class ChessGameEngine {
         this.movePiece(tile);
     }
 
+    /**
+     * Executes the actual movement of a piece on the board.
+     * This method updates the 3D position of the piece and the internal game state.
+     *
+     * @param {Tile} tile The destination tile for the moving piece.
+     */
     movePiece(tile) {
         const move = this.gameInstance.move({
             from: this.selectedPiece.chessPosition.toAlgebraicNotation(),
@@ -139,7 +138,10 @@ class ChessGameEngine {
     }
 
     /**
-     * @param {*} piece - the piece to capture
+     * Captures a piece on the board. This method updates the game state to reflect the capture
+     * and handles the removal or repositioning of the captured piece in the 3D environment.
+     *
+     * @param {Piece} piece The piece to be captured.
      */
     capturePiece(piece) {
         this.pieces = this.pieces.filter((ele) => ele !== piece);
@@ -152,8 +154,8 @@ class ChessGameEngine {
     }
 
     /**
-     * Undoes the last move made on the current player's turn.
-     * @returns
+     * Undoes the last move made. This can be used to reverse actions if a player wishes
+     * to take back their last move. It updates both the 3D environment and the game state.
      */
     undoMove() {
         if (!this.state.moveMade) return;
@@ -190,20 +192,32 @@ class ChessGameEngine {
         }
     }
 
+    /**
+     * Ends the current player's turn and updates the game state for the next player.
+     * This method is crucial for turn-based gameplay.
+     */
     endTurn() {
         this.state.moveMade = false;
         this.selectedPieceStartingWorldPosition = null;
         this.state.turn = this.currentTurn();
     }
 
+    /**
+     * Retrieves the current move number in the game.
+     *
+     * @returns {number} The current move number.
+     */
     moveNumber() {
         return this.gameInstance.moveNumber();
     }
 
     /**
-     * @param {string} pieceType the type of piece, found in ChessConfig
-     * @param {string} square the algebraic notation of the square
-     * @returns
+     * Calculates the legal moves for a given piece at a specific position.
+     * This method uses chess.js to determine legal moves according to chess rules.
+     *
+     * @param {string} pieceType The type of the piece (e.g., 'pawn', 'knight').
+     * @param {string} square The current position of the piece in algebraic notation.
+     * @returns {Array<string>} An array of legal moves in algebraic notation.
      */
     legalMoves(pieceType, square) {
         const moves = this.gameInstance.moves({
@@ -215,7 +229,9 @@ class ChessGameEngine {
     }
 
     /**
-     * @returns {string} the current turn, either 'w' or 'b'
+     * Gets the color of the player whose turn it is.
+     *
+     * @returns {string} The current player's turn ('w' for white, 'b' for black).
      */
     currentTurn() {
         return this.gameInstance.turn();

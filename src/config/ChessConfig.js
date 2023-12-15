@@ -20,6 +20,19 @@ export class ChessPosition {
     }
 }
 
+export class GameState {
+    constructor() {
+        this.updateList = [];
+        this.gameStarted = false;
+        this.turn = 'w';
+        this.rotationSpeed = 1;
+        this.whiteCaptures = [];
+        this.blackCaptures = [];
+        this.moveHistory = [];
+        this.moveMade = false;
+    }
+}
+
 class ChessConfig {
     static get SCENE_BACKGROUND() {
         return new Color('steelBlue');

@@ -4,7 +4,7 @@ import { ChessGameEngine } from "../ChessGameEngine";
 import { GameGUI } from "../GameGUI";
 import { PieceGenerator } from "../PieceGenerator";
 import { Board } from "../components/objects/Board";
-import { ChessConfig } from "../config";
+import { ChessConfig, GameState } from "../config";
 
 import {
     Scene,
@@ -14,19 +14,6 @@ import {
     Raycaster,
     Vector2,
 } from 'three';
-
-class GameState {
-    constructor() {
-        this.updateList = [];
-        this.gameStarted = false;
-        this.turn = 'w';
-        this.rotationSpeed = 1;
-        this.whiteCaptures = [];
-        this.blackCaptures = [];
-        this.moveHistory = [];
-        this.moveMade = false;
-    }
-}
 
 class ChessScene extends Scene {
     constructor(renderer, loader) {
