@@ -1,5 +1,5 @@
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { ChessConfig, ChessPosition } from '../config';
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { ChessConfig, ChessPosition } from "../config";
 
 import {
     Bishop,
@@ -29,19 +29,16 @@ class PieceGenerator {
     initPawns(color) {
         const pawns = [];
         const pawnType = ChessConfig.PIECE_TYPES.p;
-        const row = color === 'w' ? 6 : 1;
+        const row = color === 'w' ? 1 : 6;
         for (let col = 0; col < 8; col++) {
+            const tile = this.board.getObjectById(this.tileIds[row][col]);
             const pawn = new Pawn(
                 pawnType,
                 color,
-                new ChessPosition(row, col),
+                tile.userData.chessPosition,
                 col + 1
             );
-            const pos = this.board.getObjectById(
-                this.tileIds[row][col]
-            ).position;
-            pawn.position.copy(pos);
-            pawn.initWorldPos.copy(pos);
+            pawn.position.copy(tile.position);
             pawn.initModel(this.loader);
             pawns.push(pawn);
         }
@@ -66,17 +63,17 @@ class PieceGenerator {
      * @param {number} number
      */
     createRook(color, chessPos, number) {
+        const tile = this.board.getObjectById(
+            this.tileIds[chessPos.row][chessPos.column]
+        );
         const rook = new Rook(
             ChessConfig.PIECE_TYPES.r,
             color,
-            chessPos,
+            tile.userData.chessPosition,
             number
         );
-        const pos = this.board.getObjectById(
-            this.tileIds[chessPos.row][chessPos.column]
-        ).position;
-        rook.position.copy(pos);
-        rook.initWorldPos.copy(pos);
+
+        rook.position.copy(tile.position);
         rook.initModel(this.loader);
         return rook;
     }
@@ -99,17 +96,16 @@ class PieceGenerator {
      * @param {number} number
      */
     createKnight(color, chessPos, number) {
+        const tile = this.board.getObjectById(
+            this.tileIds[chessPos.row][chessPos.column]
+        );
         const knight = new Knight(
             ChessConfig.PIECE_TYPES.n,
             color,
-            chessPos,
+            tile.userData.chessPosition,
             number
         );
-        const pos = this.board.getObjectById(
-            this.tileIds[chessPos.row][chessPos.column]
-        ).position;
-        knight.position.copy(pos);
-        knight.initWorldPos.copy(pos);
+        knight.position.copy(tile.position);
         knight.initModel(this.loader);
         return knight;
     }
@@ -132,17 +128,16 @@ class PieceGenerator {
      * @param {number} number
      */
     createBishop(color, chessPos, number) {
+        const tile = this.board.getObjectById(
+            this.tileIds[chessPos.row][chessPos.column]
+        );
         const bishop = new Bishop(
             ChessConfig.PIECE_TYPES.b,
             color,
-            chessPos,
+            tile.userData.chessPosition,
             number
         );
-        const pos = this.board.getObjectById(
-            this.tileIds[chessPos.row][chessPos.column]
-        ).position;
-        bishop.position.copy(pos);
-        bishop.initWorldPos.copy(pos);
+        bishop.position.copy(tile.position);
         bishop.initModel(this.loader);
         return bishop;
     }
@@ -153,17 +148,14 @@ class PieceGenerator {
      */
     initQueen(color) {
         const row = this.getMajorPieceInitialRow(color);
+        const tile = this.board.getObjectById(this.tileIds[row][4]);
         const queen = new Queen(
             ChessConfig.PIECE_TYPES.q,
             color,
-            { row: row, column: 4 },
+            tile.userData.chessPosition,
             1
         );
-        const pos = this.board.getObjectById(
-            this.tileIds[queen.initChessPos.row][queen.initChessPos.column]
-        ).position;
-        queen.position.copy(pos);
-        queen.initWorldPos.copy(pos);
+        queen.position.copy(tile.position);
         queen.initModel(this.loader);
         return [queen];
     }
@@ -174,23 +166,20 @@ class PieceGenerator {
      */
     initKing(color) {
         const row = this.getMajorPieceInitialRow(color);
+        const tile = this.board.getObjectById(this.tileIds[row][3]);
         const king = new King(
             ChessConfig.PIECE_TYPES.k,
             color,
-            { row: row, column: 3 },
+            tile.userData.chessPosition,
             1
         );
-        const pos = this.board.getObjectById(
-            this.tileIds[king.initChessPos.row][king.initChessPos.column]
-        ).position;
-        king.position.copy(pos);
-        king.initWorldPos.copy(pos);
+        king.position.copy(tile.position);
         king.initModel(this.loader);
         return [king];
     }
 
     getMajorPieceInitialRow(color) {
-        return color === 'w' ? 7 : 0;
+        return color === 'w' ? 0 : 7;
     }
 
     /**

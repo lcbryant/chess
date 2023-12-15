@@ -1,4 +1,4 @@
-import { Vector2 } from 'three';
+import { Vector2 } from "three";
 
 // ChessController.js
 
@@ -12,12 +12,11 @@ class ChessController {
         this.initMouseHandling();
         this.whiteCaptures = []; // Tracks pieces captured by white
         this.blackCaptures = []; // Tracks pieces captured by black
-        this.whiteCapturesString = ""; // String representation of white captures
-        this.blackCapturesString = ""; // String representation of black captures
+        this.whiteCapturesString = ''; // String representation of white captures
+        this.blackCapturesString = ''; // String representation of black captures
         this.whiteCapturesControl = null;
         this.blackCapturesControl = null;
     }
-
 
     initMouseHandling() {
         console.log('Setting up mouse handling');
@@ -34,15 +33,11 @@ class ChessController {
         // Update the picking ray with the camera and mouse position
         this.raycaster.setFromCamera(this.mouse, this.camera);
 
-        // Filter to only consider chess pieces
-        const chessPieces = [];
-        this.scene.traverse((child) => {
-            if (child.isChessPiece || child.isTile) {
-                chessPieces.push(child);
-            }
-        });
         // Calculate objects intersecting the picking ray
-        const intersects = this.raycaster.intersectObjects(chessPieces, true);
+        const intersects = this.raycaster.intersectObjects(
+            this.scene.children,
+            true
+        );
 
         console.log(intersects);
 
@@ -93,7 +88,11 @@ class ChessController {
     getPieceAtTile(tile) {
         let piece = null;
         this.scene.traverse((child) => {
-            if (child.isChessPiece && child.getCurrentTile(this.scene.getObjectByName('board')) === tile) {
+            if (
+                child.isChessPiece &&
+                child.getCurrentTile(this.scene.getObjectByName('board')) ===
+                    tile
+            ) {
                 piece = child;
             }
         });
@@ -105,12 +104,15 @@ class ChessController {
         if (this.isValidMove(this.selectedPiece, tile.userData.chessPosition)) {
             // Check if the tile is occupied by another piece
             const occupiedPiece = this.getPieceAtTile(tile);
-            if (occupiedPiece && occupiedPiece.color !== this.selectedPiece.color) {
+            if (
+                occupiedPiece &&
+                occupiedPiece.color !== this.selectedPiece.color
+            ) {
                 // Capture the piece
                 occupiedPiece.capture();
                 this.addCapturedPiece(occupiedPiece);
             }
-    
+
             // Update the position of the selected piece to the center of the tile
             const tileCenter = tile.position.clone();
             tileCenter.y = this.selectedPiece.position.y;
@@ -121,18 +123,18 @@ class ChessController {
 
     // In ChessController.js
     addCapturedPiece(piece) {
-        const captureList = (piece.color === 'w') ? this.blackCaptures : this.whiteCaptures;
+        const captureList =
+            piece.color === 'w' ? this.blackCaptures : this.whiteCaptures;
         captureList.push(piece.type.toUpperCase());
-        console.log("Captured Pieces: ", captureList);
+        console.log('Captured Pieces: ', captureList);
         // Update the strings
         this.whiteCapturesString = this.whiteCaptures.join(', ');
         this.blackCapturesString = this.blackCaptures.join(', ');
-        console.log("White Captured Pieces: ", this.whiteCapturesString);
-        console.log("Black Captured Pieces: ", this.blackCapturesString);
+        console.log('White Captured Pieces: ', this.whiteCapturesString);
+        console.log('Black Captured Pieces: ', this.blackCapturesString);
         // Update the GUI
         this.updateCapturesGUI();
     }
-
 
     getBoardPositionFromIntersect(point) {
         // Calculate board position based on the intersection point

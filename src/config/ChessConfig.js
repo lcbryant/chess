@@ -1,4 +1,4 @@
-import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from 'three';
+import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from "three";
 
 /**
  * Defines some constants for the chess game
@@ -26,9 +26,17 @@ class ChessConfig {
     }
 
     static get TILE_STARTING_VECTOR() {
-        const x = -ChessConfig.BOARD_SIZE / 2 + ChessConfig.TILE_SIZE / 2;
-        const z = -ChessConfig.BOARD_SIZE / 2 + ChessConfig.TILE_SIZE / 2;
+        const x = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
+        const z = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
         return new Vector3(x, 0, z);
+    }
+
+    static get CAMERA_POSITION_BLACK() {
+        return new Vector3(0, 0.5, -0.4);
+    }
+
+    static get CAMERA_POSITION_WHITE() {
+        return new Vector3(0, 0.5, 0.4);
     }
 
     static get BOARD_SIZE() {
@@ -57,6 +65,14 @@ class ChessConfig {
         return new MeshStandardMaterial({ color });
     }
 
+    static get TILE_HIGHLIGHT_MATERIAL() {
+        const color = new Color('red').convertSRGBToLinear();
+        const material = new MeshStandardMaterial({ color });
+        material.transparent = true;
+        material.opacity = 0.5;
+        return material;
+    }
+
     static get PIECE_COLORS() {
         return { w: 'w', b: 'b' };
     }
@@ -82,27 +98,27 @@ class ChessConfig {
      */
     static get CHESS_FIELD_COLUMNS() {
         return {
-            a: 0,
-            b: 1,
-            c: 2,
-            d: 3,
-            e: 4,
-            f: 5,
-            g: 6,
-            h: 7,
+            a: 7,
+            b: 6,
+            c: 5,
+            d: 4,
+            e: 3,
+            f: 2,
+            g: 1,
+            h: 0,
         };
     }
 
     static get CHESS_FIELD_LETTERS() {
         return {
-            0: 'a',
-            1: 'b',
-            2: 'c',
-            3: 'd',
-            4: 'e',
-            5: 'f',
-            6: 'g',
-            7: 'h',
+            7: 'a',
+            6: 'b',
+            5: 'c',
+            4: 'd',
+            3: 'e',
+            2: 'f',
+            1: 'g',
+            0: 'h',
         };
     }
 }

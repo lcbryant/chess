@@ -1,6 +1,5 @@
-import { Object3D } from 'three';
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-
+import { Object3D } from "three";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 import {
     ChessConfig,
@@ -24,11 +23,9 @@ class Piece extends Object3D {
         this.color = color;
         this.model = model;
         this.number = number;
-        this.initChessPos = initialPosition;
-        this.currChessPos = initialPosition;
-        this.isChessPiece = true;
+        this.chessPosition = initialPosition;
+        this.selected = false;
         this.captured = false;
-        this.initWorldPos = new Vector3();
     }
 
     /**
@@ -72,36 +69,48 @@ class Piece extends Object3D {
         });
     }
 
-    setSelected(selected) {
-        this.isSelected = selected;
+    select() {
+        this.selected = true;
         this.traverse((o) => {
             if (!o.isMesh) return;
 
-            if (selected) {
-                // If the piece is selected, enhance its emissive property
-                o.material.emissive.setHex(0x444444); // Adjust the value as needed
-                o.material.emissiveIntensity = 2; // Increase the emissive intensity
-            } else {
-                // If the piece is not selected, reset to default
-                o.material.emissive.setHex(0x000000); // Reset to no emissive color
-                o.material.emissiveIntensity = 0.5; // Reset to original emissive intensity
-            }
+            // If the piece is selected, enhance its emissive property
+            o.material.emissive.set(); // Adjust the value as needed
+            o.material.emissiveIntensity = 2; // Increase the emissive intensity
         });
+        this.position.y += 0.05;
+    }
+
+    deselect() {
+        this.selected = false;
+        this.traverse((o) => {
+            if (!o.isMesh) return;
+
+            // If the piece is not selected, reset to default
+            o.material.emissive.setHex(0x000000); // Reset to no emissive color
+            o.material.emissiveIntensity = 0.5; // Reset to original emissive intensity
+        });
+        this.position.y -= 0.05;
     }
 
     getCurrentTile(board) {
         return board.getTileByChessPosition(this.currChessPos);
     }
 
-    update(chessPos) {}
+    move(worldPosition, chessPosition) {
+        this.position.copy(worldPosition);
+        this.chessPosition = chessPosition;
+        this.selected = false;
+    }
 
     capture() {
-        // Remove the piece from the board
-        this.parent.remove(this);
-    
+        // Move the piece to the captured position
+        // shouldn't remove meshes from the scene as recreating them is expensive
+        this.position.set(0, -10, 0);
+        this.visible = false;
+
         // Mark the piece as captured
         this.captured = true;
-
     }
 
     isCaptured() {
@@ -110,11 +119,10 @@ class Piece extends Object3D {
 
     reset() {
         // Reset the chess position of the piece to its initial position
+        this.visible = true;
         this.position.copy(this.initWorldPos);
-
         this.captured = false;
     }
 }
 
 export default Piece;
-

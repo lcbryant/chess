@@ -1,6 +1,7 @@
-import { LoadingManager, ReinhardToneMapping, WebGLRenderer } from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { ChessScene } from '../scenes';
+import "../static/styles.css";
+import { LoadingManager, ReinhardToneMapping, WebGLRenderer } from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { ChessScene } from "../scenes";
 
 /**
  * Core game class that initializes and handles the renderer, scene, and game loop
@@ -29,9 +30,6 @@ class Game {
             powerPreference: 'high-performance',
         });
         const canvas = this.renderer.domElement;
-        canvas.style.display = 'block'; // Removes padding below canvas
-        document.body.style.margin = 0; // Removes margin around page
-        document.body.style.overflow = 'hidden'; // Fix scrolling
         document.body.appendChild(canvas);
 
         this.renderer.setPixelRatio(window.devicePixelRatio);
