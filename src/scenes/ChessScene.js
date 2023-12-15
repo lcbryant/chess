@@ -68,9 +68,11 @@ class ChessScene extends Scene {
             for (const object of this.state.updateList) {
                 object.update && object.update(timeStamp);
             }
-        } else {
-            this.rotation.y = (timeStamp / 10000) * this.state.rotationSpeed;
         }
+        // would Ideally like to have this spinning but it causes the whiteTurnCamera and blackTurnCamera to be funky
+//        else {
+//            this.rotation.y = (timeStamp / 10000) * this.state.rotationSpeed;
+//        }
 
         this.camera.updateProjectionMatrix();
         this.renderer.render(this, this.camera);
