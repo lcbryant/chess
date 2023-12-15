@@ -15,7 +15,17 @@ import {
     Vector2,
 } from 'three';
 
+/**
+ * ChessScene extends the Three.js Scene class, providing a 3D environment for a chess game.
+ * It integrates various components like camera controls, game logic, and GUI elements.
+ */
 class ChessScene extends Scene {
+    /**
+     * Constructs a new ChessScene instance.
+     *
+     * @param {Renderer} renderer - The Three.js renderer.
+     * @param {Loader} loader - The Three.js loader for loading external resources.
+     */
     constructor(renderer, loader) {
         super();
         this.renderer = renderer;
@@ -37,10 +47,21 @@ class ChessScene extends Scene {
         );
     }
 
+    /**
+     * Adds an object to the update list for regular updates during the animation loop.
+     *
+     * @param {Object} object - The object to be added to the update list.
+     */
     addToUpdateList(object) {
         this.state.updateList.push(object);
     }
 
+    /**
+     * The main update loop for the scene, called on each frame of the animation.
+     * Updates camera controls, processes object updates, and renders the scene.
+     *
+     * @param {number} timeStamp - The current timestamp of the frame.
+     */
     update(timeStamp) {
         if (this.state.gameStarted) {
             this.orbitControls.update();
@@ -55,17 +76,26 @@ class ChessScene extends Scene {
         this.renderer.render(this, this.camera);
     }
 
+    /**
+     * Initializes the GUI for the chess game.
+     */
     initGui() {
         this.gui = new GameGUI(this.state);
         const button = this.gui.startGameButton();
         button.addEventListener('mousedown', this.startGame.bind(this), false);
     }
 
+    /**
+     * Starts the chess game, sets the game state to started, and configures the camera.
+     *
+     * @param {Event} event - The click event object associated with the start action.
+     */
     startGame(event) {
         event.stopPropagation();
         this.state.gameStarted = true;
         this.gui.removeStartGameButton();
         this.whiteTurnCamera();
+
         // add in other gui elements
         const turnControlButtons = this.gui.turnControlButtons();
         const [undoMoveButton, endTurnButton] = turnControlButtons.children;
@@ -79,13 +109,26 @@ class ChessScene extends Scene {
             this.endTurnCallback.bind(this),
             false
         );
+
+        const capturesGui = this.gui.capturesGui();
+        const [whiteCaptures, blackCaptures] = capturesGui.children;
     }
 
+    /**
+     * Callback function for undoing a move in the game.
+     *
+     * @param {Event} event - The event object associated with the undo move action.
+     */
     undoMoveCallback(event) {
         event.stopPropagation();
         this.engine.undoMove();
     }
 
+    /**
+     * Callback function for ending a player's turn.
+     *
+     * @param {Event} event - The event object associated with the end turn action.
+     */
     endTurnCallback(event) {
         event.stopPropagation();
         this.engine.endTurn();
@@ -94,6 +137,9 @@ class ChessScene extends Scene {
         else this.blackTurnCamera();
     }
 
+    /**
+     * Sets up window resizing handling to adjust the camera aspect ratio.
+     */
     setUpWindowResizing() {
         const windowResizeHandler = () => {
             this.camera.aspect = innerWidth / innerHeight;
@@ -104,6 +150,9 @@ class ChessScene extends Scene {
         window.addEventListener('resize', windowResizeHandler, false);
     }
 
+    /**
+     * Sets up helpers like grid and spotlight helpers for the scene.
+     */
     setUpHelpers() {
         const gridHelper = new GridHelper(1, 16);
         this.add(gridHelper);
@@ -112,22 +161,39 @@ class ChessScene extends Scene {
         this.add(spotLightHelper);
     }
 
+    /**
+     * Initializes the scene camera with the specified aspect ratio.
+     *
+     * @param {number} aspectRatio - The aspect ratio for the camera.
+     */
     initCamera(aspectRatio) {
         this.camera = new PerspectiveCamera(75, aspectRatio, 0.1, 100);
         this.camera.position.copy(ChessConfig.CAMERA_POSITION_WHITE);
         this.camera.lookAt(0, 0, 0);
     }
 
+    /**
+     * Positions the camera for the white player's perspective.
+     */
     whiteTurnCamera() {
         this.camera.position.copy(ChessConfig.CAMERA_POSITION_WHITE);
         this.camera.lookAt(0, 0, 0);
     }
 
+    /**
+     * Positions the camera for the black player's perspective.
+     */
     blackTurnCamera() {
         this.camera.position.copy(ChessConfig.CAMERA_POSITION_BLACK);
         this.camera.lookAt(0, 0, 0);
     }
 
+    /**
+     * Initializes the controls for the scene, such as orbit controls and mouse controls.
+     *
+     * @param {Camera} camera - The camera to attach the controls to.
+     * @param {HTMLElement} canvas - The canvas element for the renderer.
+     */
     initControls(camera, canvas) {
         // set up camera controls
         this.orbitControls = new OrbitControls(camera, canvas);
@@ -146,12 +212,21 @@ class ChessScene extends Scene {
         );
     }
 
-    // Calculates the mouse position in NDC
+    /**
+     * Calculates the mouse position in normalized device coordinates (NDC).
+     *
+     * @param {Event} event - The mouse event.
+     */
     getMousePosition(event) {
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
 
+    /**
+     * Handles mouse down events for the scene, including selecting pieces and tiles.
+     *
+     * @param {Event} event - The mouse down event.
+     */
     onMouseDown(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -175,8 +250,15 @@ class ChessScene extends Scene {
         if (this.state.moveMade) {
             this.gui.showTurnControlButtons();
         }
+
+        if (this.state.gameOver) {
+            this.gui.showGameOver();
+        }
     }
 
+    /**
+     * Initializes the 3D chess scene, including setting up the board, lights, and pieces.
+     */
     initScene() {
         const lights = new BasicLights();
         this.board = new Board(this.loader);
@@ -187,9 +269,13 @@ class ChessScene extends Scene {
         for (const p of pieces) this.add(p);
     }
 
+    /**
+     * Resets the chess board to its initial state.
+     */
     resetBoard() {
         // refresh the page
         location.reload();
+        this.engine.resetGame();
     }
 }
 

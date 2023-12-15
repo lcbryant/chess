@@ -33,6 +33,12 @@ canvas {
     left: 15%;
 }
 
+.top-right {
+    position: absolute;
+    top: 15%;
+    right: 15%;
+}
+
 .button {
     background-color: var(--primary-color);
     color: var(--tertiary-color);
@@ -48,4 +54,27 @@ canvas {
 
 .button:hover {
     background-color: #45a049;
+}
+
+.captures-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.captures-container.white {
+    background-color: var(--tertiary-color);
+}
+
+.captures-container.black {
+    background-color: black;
+}
+
+.capture {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
 }

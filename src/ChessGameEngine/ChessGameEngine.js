@@ -202,6 +202,28 @@ class ChessGameEngine {
         this.state.turn = this.currentTurn();
     }
 
+    evaluateGameState() {
+        if (this.gameInstance.inCheck()) {
+            // notify player that they are in check
+            // only allow moves that get them out of check
+        } else if (this.gameInstance.isCheckmate()) {
+            // notify player that they are in checkmate
+            // end game
+        } else if (this.gameInstance.isStalemate()) {
+            // notify player that they are in stalemate
+            // end game
+        } else if (this.gameInstance.isDraw()) {
+            // notify player that they are in a draw
+            // end game
+        } else if (this.gameInstance.isInsufficientMaterial()) {
+            // notify player that they are in a draw due to insufficient material
+            // end game
+        } else if (this.gameInstance.isThreefoldRepetition()) {
+            // notify player that they are in a draw due to threefold repetition
+            // end game
+        }
+    }
+
     /**
      * Retrieves the current move number in the game.
      *
@@ -236,6 +258,8 @@ class ChessGameEngine {
     currentTurn() {
         return this.gameInstance.turn();
     }
+
+    resetGame() {}
 }
 
 export default ChessGameEngine;

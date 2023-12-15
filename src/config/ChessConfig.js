@@ -30,6 +30,8 @@ export class GameState {
         this.blackCaptures = [];
         this.moveHistory = [];
         this.moveMade = false;
+        this.gameOver = false;
+        this.winner = null;
     }
 }
 
