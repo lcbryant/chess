@@ -110,8 +110,7 @@ class ChessScene extends Scene {
             false
         );
 
-        const capturesGui = this.gui.capturesGui();
-        const [whiteCaptures, blackCaptures] = capturesGui.children;
+        this.gui.capturesGui();
     }
 
     /**
