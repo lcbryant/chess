@@ -22,16 +22,18 @@ export class ChessPosition {
 
 export class GameState {
     constructor() {
+        this.gui = null;
         this.updateList = [];
         this.gameStarted = false;
         this.turn = 'w';
         this.rotationSpeed = 1;
-        this.whiteCaptures = [];
-        this.blackCaptures = [];
+        this.captures = { w: [], b: [] };
         this.moveHistory = [];
         this.moveMade = false;
         this.gameOver = false;
         this.winner = null;
+        this.inCheck = null;
+        this.winCondition = null;
     }
 }
 

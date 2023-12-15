@@ -116,11 +116,11 @@ class ChessGameEngine {
 
         if (!found) return;
 
+        this.movePiece(tile);
+
         if (!!piece) {
             this.capturePiece(piece);
         }
-
-        this.movePiece(tile);
     }
 
     /**
@@ -140,7 +140,7 @@ class ChessGameEngine {
         this.selectedPiece.move(tile.position, tile.userData.chessPosition);
         this.board.unmarkTiles();
         this.selectedPiece = null;
-        this.state.moveMade = true;
+        this.state.gui.showTurnControlButtons();
     }
 
     /**
@@ -152,11 +152,8 @@ class ChessGameEngine {
     capturePiece(piece) {
         this.pieces = this.pieces.filter((ele) => ele !== piece);
         piece.capture();
-        if (piece.color === 'w') {
-            this.state.blackCaptures.push(piece);
-        } else {
-            this.state.whiteCaptures.push(piece);
-        }
+        this.state.captures[piece.color].push(piece);
+        this.state.gui.addCapture(piece);
     }
 
     /**
@@ -195,6 +192,8 @@ class ChessGameEngine {
                 toPosition.position,
                 toPosition.userData.chessPosition
             );
+
+            this.state.gui.removeCapture(capturedPiece);
         }
     }
 
@@ -203,31 +202,43 @@ class ChessGameEngine {
      * This method is crucial for turn-based gameplay.
      */
     endTurn() {
-        this.state.moveMade = false;
         this.selectedPieceStartingWorldPosition = null;
-        this.state.turn = this.currentTurn();
+        this.evaluateGameState();
     }
 
     evaluateGameState() {
         if (this.gameInstance.inCheck()) {
             // notify player that they are in check
             // only allow moves that get them out of check
-        } else if (this.gameInstance.isCheckmate()) {
-            // notify player that they are in checkmate
-            // end game
-        } else if (this.gameInstance.isStalemate()) {
-            // notify player that they are in stalemate
-            // end game
-        } else if (this.gameInstance.isDraw()) {
-            // notify player that they are in a draw
-            // end game
-        } else if (this.gameInstance.isInsufficientMaterial()) {
-            // notify player that they are in a draw due to insufficient material
-            // end game
-        } else if (this.gameInstance.isThreefoldRepetition()) {
-            // notify player that they are in a draw due to threefold repetition
-            // end game
+            this.state.inCheck = this.currentTurn();
+        } else if (this.gameInstance.isGameOver()) {
+            // notify player that the game is over
+            // display winner
+            this.handleGameOver();
+        } else {
+            this.state.inCheck = null;
         }
+
+        this.state.moveMade = false;
+        this.state.turn = this.currentTurn();
+        this.state.moveHistory.push(this.gameInstance.history());
+    }
+
+    handleGameOver() {
+        this.state.gameOver = true;
+        if (this.gameInstance.isCheckmate()) {
+            this.state.winCondition = 'checkmate';
+        } else if (this.gameInstance.isStalemate()) {
+            this.state.winCondition = 'stalemate';
+        } else if (this.gameInstance.isDraw()) {
+            this.state.winCondition = 'draw';
+        } else if (this.gameInstance.isThreefoldRepetition()) {
+            this.state.winCondition = 'threefold repetition';
+        } else if (this.gameInstance.isInsufficientMaterial()) {
+            this.state.winCondition = 'insufficient material';
+        }
+
+        this.state.winner = this.state.turn;
     }
 
     /**

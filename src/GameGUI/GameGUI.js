@@ -1,4 +1,3 @@
-import * as ObservableSlim from "observable-slim";
 import { Piece } from "../components/objects/Pieces";
 import { ChessConfig, GameState } from "../config";
 
@@ -9,11 +8,8 @@ import { ChessConfig, GameState } from "../config";
 class GameGUI {
     /**
      * Creates a GameGUI instance.
-     *
-     * @param {GameState} state The state object of the game, used to track and reflect game status.
      */
-    constructor(state) {
-        this.state = state;
+    constructor() {
         this.pieceIcons = ChessConfig.PIECE_UNICODE;
     }
 
@@ -115,8 +111,6 @@ class GameGUI {
         capturesContainer.appendChild(whiteCapturesContainer);
         capturesContainer.appendChild(blackCapturesContainer);
         document.body.appendChild(capturesContainer);
-
-        this.addChangeListenerforCaptures();
     }
 
     /**
@@ -129,49 +123,22 @@ class GameGUI {
         else this.addBlackCapture(piece);
     }
 
-    addChangeListenerforCaptures() {
-        ObservableSlim.create(this.state.whiteCaptures, true, (changes) => {
-            console.log(changes);
-            changes.forEach((change) => {
-                if (change.addedCount > 0) {
-                    this.addWhiteCapture(change.value);
-                } else if (change.removed.length > 0) {
-                    this.removeWhiteCapture(change.removed[0]);
-                }
-            });
-        });
-
-        ObservableSlim.create(this.state.blackCaptures, true, (changes) => {
-            changes.forEach((change) => {
-                if (change.addedCount > 0) {
-                    this.addBlackCapture(change.value);
-                } else if (change.removed.length > 0) {
-                    this.removeBlackCapture(change.removed[0]);
-                }
-            });
-        });
-    }
-
     addWhiteCapture(piece) {
-        const whiteCapturesContainer = document.getElementById(
-            'whiteCapturesContainer'
-        );
+        const whiteCaptures = document.getElementById('whiteCaptures');
         const pieceContainer = document.createElement('h2');
         pieceContainer.id = `b${piece.type}`;
         pieceContainer.className = 'white-capture';
-        pieceContainer.textContent = this.pieceIcons.b[piece.type];
-        whiteCapturesContainer.appendChild(pieceContainer);
+        pieceContainer.textContent = this.pieceIcons.w[piece.type];
+        whiteCaptures.appendChild(pieceContainer);
     }
 
     addBlackCapture(piece) {
-        const blackCapturesContainer = document.getElementById(
-            'blackCapturesContainer'
-        );
+        const blackCaptures = document.getElementById('blackCaptures');
         const pieceContainer = document.createElement('h2');
         pieceContainer.id = `b${piece.type}`;
         pieceContainer.className = 'black-capture';
-        pieceContainer.textContent = this.pieceIcons.w[piece.type];
-        blackCapturesContainer.appendChild(pieceContainer);
+        pieceContainer.textContent = this.pieceIcons.b[piece.type];
+        blackCaptures.appendChild(pieceContainer);
     }
 
     removeCapture(piece) {
@@ -180,19 +147,15 @@ class GameGUI {
     }
 
     removeWhiteCapture(piece) {
-        const whiteCapturesContainer = document.getElementById(
-            'whiteCapturesContainer'
-        );
+        const whiteCaptures = document.getElementById('whiteCaptures');
         const pieceContainer = document.getElementById(`b${piece.type}`);
-        whiteCapturesContainer.removeChild(pieceContainer);
+        whiteCaptures.removeChild(pieceContainer);
     }
 
     removeBlackCapture(piece) {
-        const blackCapturesContainer = document.getElementById(
-            'blackCapturesContainer'
-        );
+        const blackCaptures = document.getElementById('blackCaptures');
         const pieceContainer = document.getElementById(`b${piece.type}`);
-        blackCapturesContainer.removeChild(pieceContainer);
+        blackCaptures.removeChild(pieceContainer);
     }
 
     /**

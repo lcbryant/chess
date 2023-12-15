@@ -82,8 +82,8 @@ class ChessScene extends Scene {
      * Initializes the GUI for the chess game.
      */
     initGui() {
-        this.gui = new GameGUI(this.state);
-        const button = this.gui.startGameButton();
+        this.state.gui = new GameGUI(this.state);
+        const button = this.state.gui.startGameButton();
         button.addEventListener('mousedown', this.startGame.bind(this), false);
     }
 
@@ -95,11 +95,11 @@ class ChessScene extends Scene {
     startGame(event) {
         event.stopPropagation();
         this.state.gameStarted = true;
-        this.gui.removeStartGameButton();
+        this.state.gui.removeStartGameButton();
         this.whiteTurnCamera();
 
         // add in other gui elements
-        const turnControlButtons = this.gui.turnControlButtons();
+        const turnControlButtons = this.state.gui.turnControlButtons();
         const [undoMoveButton, endTurnButton] = turnControlButtons.children;
         undoMoveButton.addEventListener(
             'mousedown',
@@ -112,7 +112,7 @@ class ChessScene extends Scene {
             false
         );
 
-        this.gui.capturesGui();
+        this.state.gui.capturesGui();
     }
 
     /**
@@ -133,7 +133,13 @@ class ChessScene extends Scene {
     endTurnCallback(event) {
         event.stopPropagation();
         this.engine.endTurn();
-        this.gui.hideTurnControlButtons();
+
+        if (this.state.gameOver) {
+            this.state.gui.showGameOver();
+        }
+
+        this.state.gui.hideTurnControlButtons();
+
         if (this.state.turn === 'w') this.whiteTurnCamera();
         else this.blackTurnCamera();
     }
@@ -246,14 +252,6 @@ class ChessScene extends Scene {
             this.engine.handleTileClick(clickedObject);
         } else if (!!clickedObject.userData.lastParent) {
             this.engine.handlePieceClick(clickedObject.userData.lastParent);
-        }
-
-        if (this.state.moveMade) {
-            this.gui.showTurnControlButtons();
-        }
-
-        if (this.state.gameOver) {
-            this.gui.showGameOver();
         }
     }
 
