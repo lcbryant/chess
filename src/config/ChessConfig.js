@@ -136,6 +136,27 @@ class ChessConfig {
             0: 'h',
         };
     }
+
+    static get PIECE_UNICODE() {
+        return {
+            w: {
+                p: '\u2659',
+                r: '\u2656',
+                n: '\u2658',
+                b: '\u2657',
+                q: '\u2655',
+                k: '\u2654',
+            },
+            b: {
+                p: '\u265F',
+                r: '\u265C',
+                n: '\u265E',
+                b: '\u265D',
+                q: '\u265B',
+                k: '\u265A',
+            },
+        };
+    }
 }
 
 export default ChessConfig;

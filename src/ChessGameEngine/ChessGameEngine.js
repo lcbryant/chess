@@ -110,6 +110,12 @@ class ChessGameEngine {
      * @param {Piece} piece (optional) The piece occupying the target tile, if any.
      */
     handlePieceMove(tile, piece) {
+        const found = this.board.markedTiles.find(
+            (ele) => ele.userData.chessPosition === tile.userData.chessPosition
+        );
+
+        if (!found) return;
+
         if (!!piece) {
             this.capturePiece(piece);
         }
