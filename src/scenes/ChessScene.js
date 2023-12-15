@@ -135,7 +135,12 @@ class ChessScene extends Scene {
         this.engine.endTurn();
 
         if (this.state.gameOver) {
-            this.state.gui.showGameOver();
+            const button = this.state.gui.showGameOver();
+            button.addEventListener(
+                'mousedown',
+                this.resetBoard.bind(this),
+                false
+            );
         }
 
         this.state.gui.hideTurnControlButtons();

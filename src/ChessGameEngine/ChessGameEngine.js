@@ -49,7 +49,7 @@ class ChessGameEngine {
                 const tile = this.board.getTileByChessPosition(
                     piece.chessPosition
                 );
-                this.handlePieceMove(tile, piece);
+                this.handlePieceMove(tile);
             }
         } else {
             this.selectPiece(piece);
@@ -107,20 +107,33 @@ class ChessGameEngine {
      * and captures, updating the game state as needed.
      *
      * @param {Tile} tile The tile to move the piece to.
-     * @param {Piece} piece (optional) The piece occupying the target tile, if any.
      */
-    handlePieceMove(tile, piece) {
+    handlePieceMove(tile) {
         const found = this.board.markedTiles.find(
             (ele) => ele.userData.chessPosition === tile.userData.chessPosition
         );
 
         if (!found) return;
 
+        const move = this.gameInstance.move({
+            from: this.selectedPiece.chessPosition.toAlgebraicNotation(),
+            to: tile.userData.chessPosition.toAlgebraicNotation(),
+        });
+
+        if (!move) return;
+
         this.movePiece(tile);
 
-        if (!!piece) {
-            this.capturePiece(piece);
+        if (move.captured) {
+            const capturedPiece = this.pieces.find(
+                (ele) =>
+                    ele.chessPosition.toAlgebraicNotation() === move.to &&
+                    ele.color !== move.color
+            );
+            this.capturePiece(capturedPiece);
         }
+
+        this.state.moveMade = true;
     }
 
     /**
@@ -130,13 +143,6 @@ class ChessGameEngine {
      * @param {Tile} tile The destination tile for the moving piece.
      */
     movePiece(tile) {
-        const move = this.gameInstance.move({
-            from: this.selectedPiece.chessPosition.toAlgebraicNotation(),
-            to: tile.userData.chessPosition.toAlgebraicNotation(),
-        });
-
-        if (!move) return;
-
         this.selectedPiece.move(tile.position, tile.userData.chessPosition);
         this.board.unmarkTiles();
         this.selectedPiece = null;
@@ -150,9 +156,9 @@ class ChessGameEngine {
      * @param {Piece} piece The piece to be captured.
      */
     capturePiece(piece) {
-        this.pieces = this.pieces.filter((ele) => ele !== piece);
         piece.capture();
-        this.state.captures[piece.color].push(piece);
+        const capturerColor = piece.color === 'w' ? 'b' : 'w';
+        this.state.captures[capturerColor].push(piece);
         this.state.gui.addCapture(piece);
     }
 
@@ -176,12 +182,8 @@ class ChessGameEngine {
         this.selectedPieceStartingWorldPosition = null;
 
         if (lastMove.captured) {
-            let capturedPiece = null;
-            if (lastMove.color === 'w') {
-                capturedPiece = this.state.whiteCaptures.pop();
-            } else {
-                capturedPiece = this.state.blackCaptures.pop();
-            }
+            console.log(this.state.captures);
+            const capturedPiece = this.state.captures[lastMove.color].pop();
 
             const toPosition = this.board.getTileByAlgebraicNotation(
                 lastMove.to

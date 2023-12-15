@@ -119,8 +119,9 @@ class GameGUI {
      * @param {Piece} piece The captured piece to be added to the display.
      */
     addCapture(piece) {
-        if (piece.color === 'w') this.addWhiteCapture(piece);
-        else this.addBlackCapture(piece);
+        // send it to opposite color b/c the capturer is the opposite color
+        if (piece.color === 'w') this.addBlackCapture(piece);
+        else this.addWhiteCapture(piece);
     }
 
     addWhiteCapture(piece) {
@@ -128,22 +129,22 @@ class GameGUI {
         const pieceContainer = document.createElement('h2');
         pieceContainer.id = `b${piece.type}`;
         pieceContainer.className = 'white-capture';
-        pieceContainer.textContent = this.pieceIcons.w[piece.type];
+        pieceContainer.textContent = this.pieceIcons.b[piece.type];
         whiteCaptures.appendChild(pieceContainer);
     }
 
     addBlackCapture(piece) {
         const blackCaptures = document.getElementById('blackCaptures');
         const pieceContainer = document.createElement('h2');
-        pieceContainer.id = `b${piece.type}`;
+        pieceContainer.id = `w${piece.type}`;
         pieceContainer.className = 'black-capture';
-        pieceContainer.textContent = this.pieceIcons.b[piece.type];
+        pieceContainer.textContent = this.pieceIcons.w[piece.type];
         blackCaptures.appendChild(pieceContainer);
     }
 
     removeCapture(piece) {
-        if (piece.color === 'w') this.removeWhiteCapture(piece);
-        else this.removeBlackCapture(piece);
+        if (piece.color === 'w') this.removeBlackCapture(piece);
+        else this.removeWhiteCapture(piece);
     }
 
     removeWhiteCapture(piece) {
@@ -154,19 +155,38 @@ class GameGUI {
 
     removeBlackCapture(piece) {
         const blackCaptures = document.getElementById('blackCaptures');
-        const pieceContainer = document.getElementById(`b${piece.type}`);
+        const pieceContainer = document.getElementById(`w${piece.type}`);
         blackCaptures.removeChild(pieceContainer);
     }
 
     /**
      * Displays a game over message or indicator on the GUI.
      */
-    showGameOver() {}
+    showGameOver() {
+        const gameOverContainer = document.createElement('div');
+        gameOverContainer.id = 'gameOverContainer';
+        gameOverContainer.className = 'center-mid';
+        gameOverContainer.textContent = 'Game Over';
+
+        const restartButton = document.createElement('button');
+        restartButton.id = 'restartButton';
+        restartButton.className = 'button';
+        restartButton.textContent = 'Restart Game';
+
+        document.body.appendChild(gameOverContainer);
+
+        return restartButton;
+    }
 
     /**
      * Clears the display of captured pieces, resetting it for a new game.
      */
-    clearCaptures() {}
+    clearCaptures() {
+        const whiteCaptures = document.getElementById('whiteCaptures');
+        const blackCaptures = document.getElementById('blackCaptures');
+        whiteCaptures.innerHTML = '';
+        blackCaptures.innerHTML = '';
+    }
 }
 
 export default GameGUI;
