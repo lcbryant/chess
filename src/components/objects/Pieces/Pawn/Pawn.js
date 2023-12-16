@@ -1,6 +1,6 @@
-import MODEL from '../../../../assets/pawn.glb';
-import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from '../../../../config';
-import { Piece } from '../Piece';
+import MODEL from "../../../../assets/pawn.glb";
+import { ChessPosition, PIECE_COLOR, PIECE_TYPE } from "../../../../config";
+import { Piece } from "../Piece";
 
 class Pawn extends Piece {
     /**
@@ -11,6 +11,11 @@ class Pawn extends Piece {
      */
     constructor(type, color, initialPosition, number) {
         super(type, MODEL, color, initialPosition, number);
+    }
+
+    promote(type) {
+        this.promoted = true;
+        this.promotedTo = type;
     }
 }
 

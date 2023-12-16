@@ -42,7 +42,7 @@ class ChessScene extends Scene {
         this.setUpWindowResizing();
         this.engine = new ChessGameEngine(
             this.board,
-            this.pieceGenerator.getAllPieces(),
+            this.pieceGenerator,
             this.state
         );
     }
@@ -113,6 +113,32 @@ class ChessScene extends Scene {
         );
 
         this.state.gui.capturesGui();
+        const { queenButton, rookButton, bishopButton, knightButton } =
+            this.state.gui.promotionGui();
+
+        queenButton.addEventListener(
+            'mousedown',
+            this.engine.handlePromotion.bind(this.engine, 'q'),
+            false
+        );
+
+        rookButton.addEventListener(
+            'mousedown',
+            this.engine.handlePromotion.bind(this.engine, 'r'),
+            false
+        );
+
+        bishopButton.addEventListener(
+            'mousedown',
+            this.engine.handlePromotion.bind(this.engine, 'b'),
+            false
+        );
+
+        knightButton.addEventListener(
+            'mousedown',
+            this.engine.handlePromotion.bind(this.engine, 'n'),
+            false
+        );
     }
 
     /**

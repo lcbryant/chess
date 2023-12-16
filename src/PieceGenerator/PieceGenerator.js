@@ -229,6 +229,34 @@ class PieceGenerator {
             }
         }
     }
+
+    createPiece(type, color, chessPos, worldPos, number) {
+        let piece;
+        switch (type) {
+            case ChessConfig.PIECE_TYPES.p:
+                piece = new Pawn(type, color, chessPos, worldPos, number);
+            case ChessConfig.PIECE_TYPES.r:
+                piece = new Rook(type, color, chessPos, worldPos, number);
+                break;
+            case ChessConfig.PIECE_TYPES.n:
+                piece = new Knight(type, color, chessPos, worldPos, number);
+                break;
+            case ChessConfig.PIECE_TYPES.b:
+                piece = new Bishop(type, color, chessPos, worldPos, number);
+                break;
+            case ChessConfig.PIECE_TYPES.q:
+                piece = new Queen(type, color, chessPos, worldPos, number);
+                break;
+            case ChessConfig.PIECE_TYPES.k:
+                piece = new King(type, color, chessPos, worldPos, number);
+                break;
+            default:
+                console.error(`Invalid piece type: ${type}`);
+        }
+
+        piece.initModel(this.loader);
+        return piece;
+    }
 }
 
 export default PieceGenerator;

@@ -28,8 +28,9 @@ export class GameState {
         this.turn = 'w';
         this.rotationSpeed = 1;
         this.captures = { w: [], b: [] };
+        this.promotedPieces = { w: [], b: [] };
         this.moveHistory = [];
-        this.moveMade = false;
+        this.moveMade = null;
         this.gameOver = false;
         this.winner = null;
         this.inCheck = null;

@@ -159,6 +159,55 @@ class GameGUI {
         blackCaptures.removeChild(pieceContainer);
     }
 
+    promotionGui() {
+        const promotionContainer = document.createElement('div');
+        promotionContainer.id = 'promotionContainer';
+        promotionContainer.className = 'center-mid';
+
+        const queenButton = document.createElement('button');
+        queenButton.id = 'queenButton';
+        queenButton.className = 'button';
+        queenButton.textContent = this.pieceIcons.w.q;
+
+        const rookButton = document.createElement('button');
+        rookButton.id = 'rookButton';
+        rookButton.className = 'button';
+        rookButton.textContent = this.pieceIcons.w.r;
+
+        const bishopButton = document.createElement('button');
+        bishopButton.id = 'bishopButton';
+        bishopButton.className = 'button';
+        bishopButton.textContent = this.pieceIcons.w.b;
+
+        const knightButton = document.createElement('button');
+        knightButton.id = 'knightButton';
+        knightButton.className = 'button';
+        knightButton.textContent = this.pieceIcons.w.n;
+
+        promotionContainer.appendChild(queenButton);
+        promotionContainer.appendChild(rookButton);
+        promotionContainer.appendChild(bishopButton);
+        promotionContainer.appendChild(knightButton);
+
+        document.body.appendChild(promotionContainer);
+
+        promotionContainer.style.display = 'none';
+
+        return { queenButton, rookButton, bishopButton, knightButton };
+    }
+
+    hidePromotionGui() {
+        const promotionContainer =
+            document.getElementById('promotionContainer');
+        promotionContainer.style.display = 'none';
+    }
+
+    showPromotionGui() {
+        const promotionContainer =
+            document.getElementById('promotionContainer');
+        promotionContainer.style.display = 'block';
+    }
+
     /**
      * Displays a game over message or indicator on the GUI.
      */

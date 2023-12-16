@@ -11,13 +11,14 @@ class ChessGameEngine {
      * Constructs a new ChessGameEngine instance.
      *
      * @param {Board} board The 3D chess board.
-     * @param {Array<Piece>} pieces The array of chess pieces.
+     * @param {PieceGenerator} pieceGenerator The piece generator for creating chess pieces.
      * @param {GameState} state The game state object to track captures, turns, and moves.
      */
-    constructor(board, pieces, state) {
+    constructor(board, pieceGenerator, state) {
         this.gameInstance = new Chess();
         this.board = board;
-        this.pieces = pieces;
+        this.pieceGenerator = pieceGenerator;
+        this.pieces = pieceGenerator.getAllPieces();
         this.state = state;
         this.selectedPiece = null;
         this.selectedPieceStartingWorldPosition = null;
@@ -115,14 +116,49 @@ class ChessGameEngine {
 
         if (!found) return;
 
-        const move = this.gameInstance.move({
-            from: this.selectedPiece.chessPosition.toAlgebraicNotation(),
-            to: tile.userData.chessPosition.toAlgebraicNotation(),
-        });
+        const fromTile = this.selectedPiece.chessPosition.toAlgebraicNotation();
+        const toTile = tile.userData.chessPosition.toAlgebraicNotation();
+
+        this.state.moveMade = { from: fromTile, to: toTile, promotion: null };
+
+        if (this.isPromotion(fromTile, toTile)) {
+            this.state.gui.showPromotionGui();
+            return;
+        }
+
+        this.movePiece();
+    }
+
+    isPromotion(fromTile, toTile) {
+        if (this.selectedPiece.type !== 'p') return false;
+
+        const fromRank = parseInt(fromTile[1]);
+
+        if (this.selectedPiece.color === 'w') {
+            return fromRank === 7 && toTile[1] === '8';
+        }
+
+        return fromRank === 2 && toTile[1] === '1';
+    }
+
+    handlePromotion(type) {
+        this.selectedPiece.promote(type);
+        this.state.moveMade.promotion = type;
+        this.selectedPiece.promote(type);
+        this.state.gui.hidePromotionGui();
+        this.movePiece();
+    }
+
+    /**
+     * Executes the actual movement of a piece on the board.
+     * This method updates the 3D position of the piece and the internal game state.
+     */
+    movePiece() {
+        const move = this.gameInstance.move(this.state.moveMade);
 
         if (!move) return;
 
-        this.movePiece(tile);
+        const tile = this.board.getTileByAlgebraicNotation(move.to);
 
         if (move.captured) {
             const capturedPiece = this.pieces.find(
@@ -133,16 +169,6 @@ class ChessGameEngine {
             this.capturePiece(capturedPiece);
         }
 
-        this.state.moveMade = true;
-    }
-
-    /**
-     * Executes the actual movement of a piece on the board.
-     * This method updates the 3D position of the piece and the internal game state.
-     *
-     * @param {Tile} tile The destination tile for the moving piece.
-     */
-    movePiece(tile) {
         this.selectedPiece.move(tile.position, tile.userData.chessPosition);
         this.board.unmarkTiles();
         this.selectedPiece = null;
@@ -178,7 +204,7 @@ class ChessGameEngine {
         const fromPosition = this.board.algebraicToIndices(lastMove.from);
 
         piece.move(this.selectedPieceStartingWorldPosition, fromPosition);
-        this.state.moveMade = false;
+        this.state.moveMade = null;
         this.selectedPieceStartingWorldPosition = null;
 
         if (lastMove.captured) {
@@ -221,7 +247,7 @@ class ChessGameEngine {
             this.state.inCheck = null;
         }
 
-        this.state.moveMade = false;
+        this.state.moveMade = null;
         this.state.turn = this.currentTurn();
         this.state.moveHistory.push(this.gameInstance.history());
     }
