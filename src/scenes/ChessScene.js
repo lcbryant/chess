@@ -34,7 +34,7 @@ class ChessScene extends Scene {
 
         this.state = new GameState();
 
-        this.background = ChessConfig.SCENE_BACKGROUND;
+        this.background = ChessConfig.sceneBackground;
         this.initScene();
         this.initCamera(window.innerWidth / window.innerHeight);
         this.initControls(this.camera, renderer.domElement);
@@ -45,6 +45,16 @@ class ChessScene extends Scene {
             this.pieceGenerator,
             this.state
         );
+    }
+
+    setUpWindowResizing() {
+        const windowResizeHandler = () => {
+            const { innerHeight, innerWidth } = window;
+            this.renderer.setSize(innerWidth, innerHeight);
+        };
+
+        windowResizeHandler();
+        window.addEventListener('resize', windowResizeHandler, false);
     }
 
     /**
@@ -176,19 +186,6 @@ class ChessScene extends Scene {
     }
 
     /**
-     * Sets up window resizing handling to adjust the camera aspect ratio.
-     */
-    setUpWindowResizing() {
-        const windowResizeHandler = () => {
-            this.camera.aspect = innerWidth / innerHeight;
-            this.camera.updateProjectionMatrix();
-        };
-
-        windowResizeHandler();
-        window.addEventListener('resize', windowResizeHandler, false);
-    }
-
-    /**
      * Sets up helpers like grid and spotlight helpers for the scene.
      */
     setUpHelpers() {
@@ -206,7 +203,7 @@ class ChessScene extends Scene {
      */
     initCamera(aspectRatio) {
         this.camera = new PerspectiveCamera(75, aspectRatio, 0.1, 100);
-        this.camera.position.copy(ChessConfig.CAMERA_POSITION_WHITE);
+        this.camera.position.copy(ChessConfig.whiteSideCameraPosition);
         this.camera.lookAt(0, 0, 0);
     }
 
@@ -214,7 +211,7 @@ class ChessScene extends Scene {
      * Positions the camera for the white player's perspective.
      */
     whiteTurnCamera() {
-        this.camera.position.copy(ChessConfig.CAMERA_POSITION_WHITE);
+        this.camera.position.copy(ChessConfig.whiteSideCameraPosition);
         this.camera.lookAt(0, 0, 0);
     }
 
@@ -222,7 +219,7 @@ class ChessScene extends Scene {
      * Positions the camera for the black player's perspective.
      */
     blackTurnCamera() {
-        this.camera.position.copy(ChessConfig.CAMERA_POSITION_BLACK);
+        this.camera.position.copy(ChessConfig.blackSideCameraPosition);
         this.camera.lookAt(0, 0, 0);
     }
 

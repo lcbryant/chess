@@ -1,12 +1,12 @@
-import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from 'three';
+import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from "three";
 
 /**
- * Defines some constants for the chess game
+ * Represents a position on the chessboard in terms of its row and column indices.
  */
-
 export class ChessPosition {
     /**
      * For simplicity, this class stores the index of the indices of the tile in the Board.tileMatrix
+     *
      * @param {number} row
      * @param {number} column
      */
@@ -15,11 +15,19 @@ export class ChessPosition {
         this.column = column;
     }
 
+    /**
+     * Converts the row and column indices to algebraic notation.
+     *
+     * @returns {string} The position in algebraic notation.
+     */
     toAlgebraicNotation() {
-        return `${ChessConfig.CHESS_FIELD_LETTERS[this.column]}${this.row + 1}`;
+        return `${ChessConfig.chessFieldLetters[this.column]}${this.row + 1}`;
     }
 }
 
+/**
+ * Represents the overall state of the chess game, including the GUI, turn information, and game status.
+ */
 export class GameState {
     constructor() {
         this.gui = null;
@@ -38,52 +46,109 @@ export class GameState {
     }
 }
 
+/**
+ * Contains static configurations and constants for the chess game.
+ */
 class ChessConfig {
-    static get SCENE_BACKGROUND() {
+    constructor() {
+        throw new Error('This class cannot be instantsiated.');
+    }
+
+    // Constants for scene, tiles, camera positions, materials, etc.
+    static get sceneBackground() {
         return new Color('steelBlue');
     }
 
-    static get TILE_STARTING_VECTOR() {
-        const x = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
-        const z = ChessConfig.BOARD_SIZE / 2 - ChessConfig.TILE_SIZE / 2;
+    /**
+     * Returns the position of the first tile created on the board.
+     */
+    static get tileStartingVector() {
+        const x = ChessConfig.boardSize / 2 - ChessConfig.tileSize / 2;
+        const z = ChessConfig.boardSize / 2 - ChessConfig.tileSize / 2;
         return new Vector3(x, 0, z);
     }
 
-    static get CAMERA_POSITION_BLACK() {
+    /**
+     * Returns the position of the camera when it is the black player's turn.
+     *
+     * @returns {Vector3} - The position of the camera when it is the black player's turn.
+     */
+    static get blackSideCameraPosition() {
         return new Vector3(0, 0.5, -0.4);
     }
 
-    static get CAMERA_POSITION_WHITE() {
+    /**
+     * Returns the position of the camera when it is the white player's turn.
+     *
+     * @returns {Vector3} - The position of the camera when it is the white player's turn.
+     */
+    static get whiteSideCameraPosition() {
         return new Vector3(0, 0.5, 0.4);
     }
 
-    static get BOARD_SIZE() {
+    /**
+     * Returns the size of the board.
+     *
+     * @returns {number} - The size of the board.
+     */
+    static get boardSize() {
         return 0.5;
     }
 
-    static get DIVISIONS() {
+    /**
+     * Returns the number of tiles on each side of the board.
+     *
+     * @returns {number} - The number of tiles on each side of the board.
+     */
+    static get divisions() {
         return 8;
     }
 
-    static get TILE_SIZE() {
-        return ChessConfig.BOARD_SIZE / ChessConfig.DIVISIONS;
+    /**
+     * Returns the size of each tile on the board.
+     *
+     * @returns {number} - The size of each tile on the board.
+     */
+    static get tileSize() {
+        return ChessConfig.boardSize / ChessConfig.divisions;
     }
 
-    static get TILE_COUNT() {
-        return ChessConfig.DIVISIONS * ChessConfig.DIVISIONS;
+    /**
+     * Returns the total number of tiles on the board.
+     *
+     * @returns {number} - The total number of tiles on the board.
+     */
+    static get tileCount() {
+        return ChessConfig.divisions * ChessConfig.divisions;
     }
 
-    static get TILE_WHITE_MATERIAL() {
+    /**
+     * Returns the material for the light tiles. The color is not
+     * pure white to allow for lighting effects.
+     *
+     * @returns {MeshStandardMaterial} - The material for the light tiles.
+     */
+    static get lightTileMaterial() {
         const color = new Color('antiqueWhite').convertSRGBToLinear();
         return new MeshStandardMaterial({ color });
     }
 
-    static get TILE_BLACK_MATERIAL() {
+    /**
+     * Returns the material for the dark tiles.
+     *
+     * @returns {MeshStandardMaterial} - The material for the dark tiles.
+     */
+    static get darkTileMaterial() {
         const color = new Color('black').convertSRGBToLinear();
         return new MeshStandardMaterial({ color });
     }
 
-    static get TILE_HIGHLIGHT_MATERIAL() {
+    /**
+     * Returns the material for the tile marker.
+     *
+     * @returns {MeshStandardMaterial} - The material for the tile marker.
+     */
+    static get tileMarkerMaterial() {
         const color = new Color('red').convertSRGBToLinear();
         const material = new MeshStandardMaterial({ color });
         material.transparent = true;
@@ -91,30 +156,55 @@ class ChessConfig {
         return material;
     }
 
-    static get PIECE_COLORS() {
+    /**
+     * Maps the chess piece types to their corresponding indices in the tileMatrix.
+     *
+     * @returns {object} - An object mapping the piece types to their corresponding indices.
+     */
+    static get pieceColorStrings() {
         return { w: 'w', b: 'b' };
     }
 
-    static get PIECE_WHITE_MATERIAL() {
+    /**
+     * Returns the material for the chess piece based on its color. Color is chosen
+     * due to how the chess pieces interact with lighting.
+     *
+     * @returns {MeshPhongMaterial} - The material for the chess piece.
+     */
+    static get lightPieceMaterial() {
         const color = new Color(0x808080).convertSRGBToLinear();
         const mat = new MeshPhongMaterial({ color });
         mat.shininess = 100;
         return mat;
     }
 
-    static get PIECE_BLACK_MATERIAL() {
+    /**
+     * Returns the material for the chess piece based on its color. Color is chosen
+     * due to how the chess pieces interact with lighting.
+     *
+     * @returns {MeshPhongMaterial} - The material for the chess piece.
+     */
+    static get darkPieceMaterial() {
         const color = new Color(0.15, 0.15, 0.15).convertSRGBToLinear();
         return new MeshPhongMaterial({ color });
     }
 
-    static get PIECE_TYPES() {
+    /**
+     * Maps the chess piece types to their corresponding characters in FEN notation.
+     * The characters are used to represent the pieces in the FEN string.
+     *
+     * @returns {object} - An object mapping the piece types to their corresponding characters.
+     */
+    static get pieceTypeCharacters() {
         return { p: 'p', r: 'r', n: 'n', b: 'b', q: 'q', k: 'k' };
     }
 
     /**
-     * Maps the column letter to the index of the column in the tileMatrix
+     * Maps column letters to their corresponding indices in the tileMatrix.
+     *
+     * @returns {object} - An object mapping the column letters to their corresponding indices.
      */
-    static get CHESS_FIELD_COLUMNS() {
+    static get chessFieldColumns() {
         return {
             a: 7,
             b: 6,
@@ -127,7 +217,12 @@ class ChessConfig {
         };
     }
 
-    static get CHESS_FIELD_LETTERS() {
+    /**
+     * Maps column indices to their corresponding letters in algebraic notation.
+     *
+     * @returns {object} - An object mapping the column indices to their corresponding letters.
+     */
+    static get chessFieldLetters() {
         return {
             7: 'a',
             6: 'b',
@@ -140,7 +235,10 @@ class ChessConfig {
         };
     }
 
-    static get PIECE_UNICODE() {
+    /**
+     * Unicode characters for chess pieces, categorized by color.
+     */
+    static get pieceUnicode() {
         return {
             w: {
                 p: '\u2659',

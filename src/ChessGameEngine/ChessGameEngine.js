@@ -40,6 +40,8 @@ class ChessGameEngine {
      * @param {Piece} piece The piece that was clicked.
      */
     handlePieceClick(piece) {
+        if (this.state.moveMade) return;
+
         if (this.anyPieceSelected()) {
             if (piece === this.selectedPiece) {
                 this.deselectPiece();
@@ -58,6 +60,8 @@ class ChessGameEngine {
     }
 
     handleTileClick(tile) {
+        if (this.state.moveMade) return;
+
         if (!this.anyPieceSelected()) return;
 
         const found = this.board.markedTiles.find(
@@ -154,7 +158,8 @@ class ChessGameEngine {
      * This method updates the 3D position of the piece and the internal game state.
      */
     movePiece() {
-        const move = this.gameInstance.move(this.state.moveMade);
+        const str = `${this.state.moveMade.from}${this.state.moveMade.to}`;
+        const move = this.gameInstance.move(str, { sloppy: true });
 
         if (!move) return;
 

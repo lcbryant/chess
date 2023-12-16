@@ -11,10 +11,17 @@ import {
     Rook,
 } from '../components/objects/Pieces';
 
+/**
+ * The PieceGenerator class handles the creation and initialization of all chess pieces
+ * on the board. It uses the provided Board instance and GLTFLoader to place pieces at
+ * their initial positions and load their respective 3D models.
+ */
 class PieceGenerator {
     /**
-     * @param {Board} ChessBoard
-     * @param {GLTFLoader} loader
+     * Constructs the PieceGenerator instance.
+     *
+     * @param {Board} ChessBoard - The Board instance where the pieces will be placed.
+     * @param {GLTFLoader} loader - The loader used for loading 3D models of the pieces.
      */
     constructor(ChessBoard, loader) {
         this.board = ChessBoard;
@@ -23,12 +30,14 @@ class PieceGenerator {
     }
 
     /**
-     * @param {PIECE_COLOR} color
-     * @returns {Array<Pawn>}
+     * Initializes and returns an array of Pawn pieces for the specified color.
+     *
+     * @param {PIECE_COLOR} color - The color of the pawns ('w' for white, 'b' for black).
+     * @returns {Array<Pawn>} An array of initialized Pawn pieces.
      */
     initPawns(color) {
         const pawns = [];
-        const pawnType = ChessConfig.PIECE_TYPES.p;
+        const pawnType = ChessConfig.pieceTypeCharacters.p;
         const row = color === 'w' ? 1 : 6;
         for (let col = 0; col < 8; col++) {
             const tile = this.board.getObjectById(this.tileIds[row][col]);
@@ -47,8 +56,10 @@ class PieceGenerator {
     }
 
     /**
-     * @param {PIECE_COLOR} color
-     * @returns {Array<Rook>}
+     * Initializes and returns an array of Rook pieces for the specified color.
+     *
+     * @param {PIECE_COLOR} color - The color of the rooks.
+     * @returns {Array<Rook>} An array of initialized Rook pieces.
      */
     initRooks(color) {
         const rooks = [];
@@ -68,7 +79,7 @@ class PieceGenerator {
             this.tileIds[chessPos.row][chessPos.column]
         );
         const rook = new Rook(
-            ChessConfig.PIECE_TYPES.r,
+            ChessConfig.pieceTypeCharacters.r,
             color,
             tile.userData.chessPosition,
             tile.position,
@@ -81,6 +92,8 @@ class PieceGenerator {
     }
 
     /**
+     * Initializes and returns an array of Knight pieces for the specified color.
+     *
      * @param {PIECE_COLOR} color
      * @returns {Array<Knight>}
      */
@@ -102,7 +115,7 @@ class PieceGenerator {
             this.tileIds[chessPos.row][chessPos.column]
         );
         const knight = new Knight(
-            ChessConfig.PIECE_TYPES.n,
+            ChessConfig.pieceTypeCharacters.n,
             color,
             tile.userData.chessPosition,
             tile.position,
@@ -114,6 +127,8 @@ class PieceGenerator {
     }
 
     /**
+     * Initializes and returns an array of Bishop pieces for the specified color.
+     *
      * @param {PIECE_COLOR} color
      * @returns {Array<Bishop>}
      */
@@ -135,7 +150,7 @@ class PieceGenerator {
             this.tileIds[chessPos.row][chessPos.column]
         );
         const bishop = new Bishop(
-            ChessConfig.PIECE_TYPES.b,
+            ChessConfig.pieceTypeCharacters.b,
             color,
             tile.userData.chessPosition,
             tile.position,
@@ -147,6 +162,8 @@ class PieceGenerator {
     }
 
     /**
+     * Initializes and returns an array with a Queen piece for the specified color.
+     *
      * @param {PIECE_COLOR} color
      * @returns {Array<Queen>}
      */
@@ -154,7 +171,7 @@ class PieceGenerator {
         const row = this.getMajorPieceInitialRow(color);
         const tile = this.board.getObjectById(this.tileIds[row][4]);
         const queen = new Queen(
-            ChessConfig.PIECE_TYPES.q,
+            ChessConfig.pieceTypeCharacters.q,
             color,
             tile.userData.chessPosition,
             tile.position,
@@ -166,6 +183,8 @@ class PieceGenerator {
     }
 
     /**
+     * Initializes and returns an array with a King piece for the specified color.
+     *
      * @param {PIECE_COLOR} color
      * @returns {Array<King>}
      */
@@ -173,7 +192,7 @@ class PieceGenerator {
         const row = this.getMajorPieceInitialRow(color);
         const tile = this.board.getObjectById(this.tileIds[row][3]);
         const king = new King(
-            ChessConfig.PIECE_TYPES.k,
+            ChessConfig.pieceTypeCharacters.k,
             color,
             tile.userData.chessPosition,
             tile.position,
@@ -189,11 +208,12 @@ class PieceGenerator {
     }
 
     /**
-     * creates and stores the pieces in the initial position
+     * Creates all pieces and stores them in their initial positions.
+     * This method is called to set up the board with all the chess pieces.
      */
     initPieces() {
         this.pieces = {};
-        const pieceColors = ChessConfig.PIECE_COLORS;
+        const pieceColors = ChessConfig.pieceColorStrings;
         for (const color of Object.values(pieceColors)) {
             this.pieces[color] = {
                 p: this.initPawns(color),
@@ -206,21 +226,40 @@ class PieceGenerator {
         }
     }
 
+    /**
+     * Retrieves all pieces from the board.
+     *
+     * @returns {Array<Object3D>} An array containing all the pieces on the board.
+     */
     getAllPieces() {
         const pieces = [];
-        for (const color of Object.values(ChessConfig.PIECE_COLORS)) {
+        for (const color of Object.values(ChessConfig.pieceColorStrings)) {
             const pieceList = this.pieces[color];
-            for (const pieceType of Object.values(ChessConfig.PIECE_TYPES)) {
+            for (const pieceType of Object.values(
+                ChessConfig.pieceTypeCharacters
+            )) {
                 pieces.push(...pieceList[pieceType]);
             }
         }
         return pieces;
     }
 
+    /**
+     * Retrieves a specific piece based on its color, type, and number.
+     *
+     * @param {PIECE_COLOR} color - The color of the piece.
+     * @param {string} type - The type of the piece (e.g., 'p' for Pawn).
+     * @param {number} number - The identifier number for the piece.
+     * @returns {Object3D} The specified chess piece.
+     */
     getPiece(color, type, number) {
         return this.pieces[color][type][number - 1];
     }
 
+    /**
+     * Resets all pieces to their initial positions and states.
+     * This is typically used when resetting the game.
+     */
     resetPieces() {
         const pieces = this.getAllPieces();
         for (const piece of pieces) {
@@ -230,24 +269,35 @@ class PieceGenerator {
         }
     }
 
+    /**
+     * Creates a chess piece of the specified type and color, placing it at the given position.
+     *
+     * @param {string} type - The type of the piece (e.g., 'k' for King).
+     * @param {PIECE_COLOR} color - The color of the piece.
+     * @param {ChessPosition} chessPos - The chess position of the piece.
+     * @param {Vector3} worldPos - The world position of the piece.
+     * @param {number} number - The identifier number for the piece.
+     * @returns {Object3D} The created chess piece.
+     */
     createPiece(type, color, chessPos, worldPos, number) {
         let piece;
         switch (type) {
-            case ChessConfig.PIECE_TYPES.p:
+            case ChessConfig.pieceTypeCharacters.p:
                 piece = new Pawn(type, color, chessPos, worldPos, number);
-            case ChessConfig.PIECE_TYPES.r:
+                break;
+            case ChessConfig.pieceTypeCharacters.r:
                 piece = new Rook(type, color, chessPos, worldPos, number);
                 break;
-            case ChessConfig.PIECE_TYPES.n:
+            case ChessConfig.pieceTypeCharacters.n:
                 piece = new Knight(type, color, chessPos, worldPos, number);
                 break;
-            case ChessConfig.PIECE_TYPES.b:
+            case ChessConfig.pieceTypeCharacters.b:
                 piece = new Bishop(type, color, chessPos, worldPos, number);
                 break;
-            case ChessConfig.PIECE_TYPES.q:
+            case ChessConfig.pieceTypeCharacters.q:
                 piece = new Queen(type, color, chessPos, worldPos, number);
                 break;
-            case ChessConfig.PIECE_TYPES.k:
+            case ChessConfig.pieceTypeCharacters.k:
                 piece = new King(type, color, chessPos, worldPos, number);
                 break;
             default:

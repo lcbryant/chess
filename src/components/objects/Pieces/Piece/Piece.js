@@ -1,21 +1,22 @@
-import { Object3D } from 'three';
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Object3D } from "three";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { ChessConfig, ChessPosition } from "../../../../config";
 
-import {
-    ChessConfig,
-    ChessPosition,
-    PIECE_TYPE,
-    PIECE_COLOR,
-} from '../../../../config';
-
+/**
+ * Represents a chess piece in the game. It includes properties for the piece's type,
+ * color, position, and state, and methods for initializing the 3D model, selection,
+ * movement, and capture.
+ */
 class Piece extends Object3D {
     /**
-     * @param {PIECE_TYPE} type
-     * @param {GLTF} model
-     * @param {PIECE_COLOR} color
-     * @param {ChessPosition} initialChessPosition
-     * @param {Vector3} initialWorldPositon
-     * @param {number} number - the number corresponds to the multiples of the piece type
+     * Constructs a Piece instance.
+     *
+     * @param {string} type - The type of the chess piece (e.g., 'p' for Pawn).
+     * @param {GLTF} model - The 3D model of the chess piece.
+     * @param {string} color - The color of the chess piece ('w' for white, 'b' for black).
+     * @param {ChessPosition} initialChessPosition - The initial chess position on the board.
+     * @param {Vector3} initialWorldPositon - The initial position in world coordinates.
+     * @param {number} number - Identifier for the piece, especially for distinguishing multiple pieces of the same type.
      */
     constructor(
         type,
@@ -38,8 +39,10 @@ class Piece extends Object3D {
     }
 
     /**
-     *  @param {GLTFLoader} loader
-     *  @returns {Promise<GLTF>}
+     * Initializes the 3D model of the chess piece.
+     *
+     * @param {GLTFLoader} loader - The loader to use for loading the model.
+     * @returns {Promise<GLTF>} A promise that resolves with the loaded model.
      */
     initModel(loader) {
         return new Promise((resolve, reject) => {
@@ -60,6 +63,9 @@ class Piece extends Object3D {
         });
     }
 
+    /**
+     * Changes the material of the chess piece based on its color.
+     */
     changeMaterial() {
         this.mesh.traverse((o) => {
             if (!o.isMesh) {
@@ -73,11 +79,14 @@ class Piece extends Object3D {
 
             o.material =
                 this.color === 'w'
-                    ? ChessConfig.PIECE_WHITE_MATERIAL
-                    : ChessConfig.PIECE_BLACK_MATERIAL;
+                    ? ChessConfig.lightPieceMaterial
+                    : ChessConfig.darkPieceMaterial;
         });
     }
 
+    /**
+     * Marks the chess piece as selected, visually enhancing its appearance.
+     */
     select() {
         this.selected = true;
         this.traverse((o) => {
@@ -90,6 +99,9 @@ class Piece extends Object3D {
         this.position.y += 0.05;
     }
 
+    /**
+     * Marks the chess piece as deselected, reverting any visual enhancements.
+     */
     deselect() {
         this.selected = false;
         this.traverse((o) => {
@@ -102,16 +114,31 @@ class Piece extends Object3D {
         this.position.y -= 0.05;
     }
 
+    /**
+     * Gets the current tile on which the chess piece is placed.
+     *
+     * @param {Board} board - The board to which the piece belongs.
+     * @returns {Mesh} The current tile mesh.
+     */
     getCurrentTile(board) {
         return board.getTileByChessPosition(this.currChessPos);
     }
 
+    /**
+     * Moves the chess piece to a new position.
+     *
+     * @param {Vector3} worldPosition - The new position in world coordinates.
+     * @param {ChessPosition} chessPosition - The new chess position on the board.
+     */
     move(worldPosition, chessPosition) {
         this.position.copy(worldPosition);
         this.chessPosition = chessPosition;
         this.selected = false;
     }
 
+    /**
+     * Captures the chess piece, visually indicating its removal from play.
+     */
     capture() {
         // Move the piece to the captured position
         // shouldn't remove meshes from the scene as recreating them is expensive
@@ -122,14 +149,26 @@ class Piece extends Object3D {
         this.captured = true;
     }
 
+    /**
+     * Checks if the chess piece has been captured.
+     *
+     * @returns {boolean} True if the piece is captured, false otherwise.
+     */
     isCaptured() {
         return this.captured;
     }
 
-    reset() {
+    /**
+     * Resets the chess piece to its initial state and position.
+     *
+     * @param {Vector3} worldPosition - The new position in world coordinates.
+     * @param {ChessPosition} chessPosition - The new chess position on the board.
+     */
+    reset(worldPosition, chessPosition) {
         // Reset the chess position of the piece to its initial position
         this.visible = true;
-        this.position.copy(this.initialWorldPosition);
+        this.position.copy(worldPosition);
+        this.chessPosition = chessPosition;
         this.captured = false;
     }
 }

@@ -10,7 +10,7 @@ class GameGUI {
      * Creates a GameGUI instance.
      */
     constructor() {
-        this.pieceIcons = ChessConfig.PIECE_UNICODE;
+        this.pieceIcons = ChessConfig.pieceUnicode;
     }
 
     /**
