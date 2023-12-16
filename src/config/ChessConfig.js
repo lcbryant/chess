@@ -1,4 +1,4 @@
-import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from "three";
+import { Color, MeshPhongMaterial, MeshStandardMaterial, Vector3 } from 'three';
 
 /**
  * Defines some constants for the chess game
@@ -103,7 +103,7 @@ class ChessConfig {
     }
 
     static get PIECE_BLACK_MATERIAL() {
-        const color = new Color(0x0f0f0f).convertSRGBToLinear();
+        const color = new Color(0.15, 0.15, 0.15).convertSRGBToLinear();
         return new MeshPhongMaterial({ color });
     }
 
